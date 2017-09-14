@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="bottom"
-    android:background="@color/black_overlay"
     android:gravity="bottom"
     android:orientation="horizontal"
     tools:context="com.locit.cecilhlungwana.inethi.BeatActivity"
@@ -21,7 +20,7 @@
 
         <TextView
             android:id="@+id/volumetextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/volume"
             android:textAlignment="center"
@@ -38,9 +37,11 @@
 
         <ImageButton
             android:id="@+id/speakerimageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:contentDescription=""
+            android:tint="@color/primaryColorDark"
             app:srcCompat="@drawable/speaker"
             tools:ignore="ContentDescription" />
     </LinearLayout>
@@ -48,7 +49,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="bottom"
         android:layout_weight="4"
         android:orientation="vertical">
 
@@ -59,14 +60,15 @@
 
             <Button
                 android:id="@+id/kickbutton"
-                android:layout_width="wrap_content"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/kick" />
 
             <ToggleButton
                 android:id="@+id/k1toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -75,7 +77,7 @@
 
             <ToggleButton
                 android:id="@+id/k2toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -84,7 +86,7 @@
 
             <ToggleButton
                 android:id="@+id/k3toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -93,7 +95,7 @@
 
             <ToggleButton
                 android:id="@+id/k4toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -117,14 +119,15 @@
 
             <Button
                 android:id="@+id/clapbutton"
-                android:layout_width="wrap_content"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/clap" />
 
             <ToggleButton
                 android:id="@+id/c1toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="false"
@@ -134,7 +137,7 @@
 
             <ToggleButton
                 android:id="@+id/c2toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -143,7 +146,7 @@
 
             <ToggleButton
                 android:id="@+id/c3toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -152,7 +155,7 @@
 
             <ToggleButton
                 android:id="@+id/c4toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -176,23 +179,25 @@
 
             <Button
                 android:id="@+id/hihatbutton"
-                android:layout_width="wrap_content"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/hihat" />
 
             <ToggleButton
                 android:id="@+id/h1toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
                 android:textOff=""
-                android:textOn="" />
+                android:textOn=""
+                tools:ignore="DuplicateIds" />
 
             <ToggleButton
                 android:id="@+id/h2toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -201,7 +206,7 @@
 
             <ToggleButton
                 android:id="@+id/h3toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -210,7 +215,7 @@
 
             <ToggleButton
                 android:id="@+id/h4toggleButton"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
@@ -229,72 +234,119 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            tools:ignore="NestedWeights">
 
             <Button
                 android:id="@+id/snarebutton"
-                android:layout_width="wrap_content"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/snare" />
 
-            <LinearLayout
+            <ToggleButton
+                android:id="@+id/s1toggleButton"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textOff=""
+                android:textOn="" />
+
+            <ToggleButton
+                android:id="@+id/s2toggleButton"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textOff=""
+                android:textOn="" />
+
+            <ToggleButton
+                android:id="@+id/s3toggleButton"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textOff=""
+                android:textOn="" />
+
+            <ToggleButton
+                android:id="@+id/s4toggleButton"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textOff=""
+                android:textOn="" />
+
+            <!--ToggleButton
+                android:id="@+id/h5toggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3.5"
+                android:layout_weight="1"
+                android:text=""
+                android:textOff=""
+                android:textOn="" /-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            tools:ignore="NestedWeights">
+
+            <ImageButton
+                android:id="@+id/micimageButton"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription=""
+                android:tint="@color/primaryColorDark"
+                app:srcCompat="@drawable/record"
+                tools:ignore="ContentDescription" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/musicimageButton"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription=""
+                android:tint="@color/primaryColorDark"
+                app:srcCompat="@drawable/music"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ToggleButton
-                        android:id="@+id/s1toggleButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textOff=""
-                        android:textOn="" />
-
-                    <ToggleButton
-                        android:id="@+id/s2toggleButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textOff=""
-                        android:textOn="" />
-
-                    <ToggleButton
-                        android:id="@+id/s3toggleButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textOff=""
-                        android:textOn="" />
-
-                    <ToggleButton
-                        android:id="@+id/s4toggleButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textOff=""
-                        android:textOn="" />
-
-                    <!--ToggleButton
-                        android:id="@+id/s5toggleButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textOff=""
-                        android:textOn="" /-->
-                </LinearLayout>
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    tools:ignore="NestedWeights" />
 
                 <SeekBar
                     android:id="@+id/loopseekBar"
@@ -310,68 +362,15 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/playimageButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_weight="12"
-            android:orientation="horizontal"
-            tools:ignore="NestedWeights">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/stopimageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/stop"
-                    tools:ignore="ContentDescription" />
-
-                <ImageButton
-                    android:id="@+id/playimageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/play"
-                    tools:ignore="ContentDescription" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/micimageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:contentDescription=""
-                    app:srcCompat="@drawable/record"
-                    tools:ignore="ContentDescription" />
-
-                <ImageButton
-                    android:id="@+id/musicimageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:contentDescription=""
-                    app:srcCompat="@drawable/music"
-                    tools:ignore="ContentDescription" />
-            </LinearLayout>
-
-        </LinearLayout>
+            android:tint="@color/primaryColorDark"
+            app:srcCompat="@drawable/play"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
@@ -442,6 +441,7 @@
 
         <Button
             android:id="@+id/savebutton"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/save" />

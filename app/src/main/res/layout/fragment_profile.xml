@@ -24,12 +24,17 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
+                android:background="@color/primaryColorAccent"
                 android:contentDescription=""
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
                 app:srcCompat="@drawable/profilepicture"
                 tools:ignore="ContentDescription" />
 
@@ -63,12 +68,14 @@
 
             <Button
                 android:id="@+id/savebutton"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/save" />
 
             <Button
                 android:id="@+id/signoutbutton"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sign_out" />

@@ -127,7 +127,6 @@ public class BeatFragment extends Fragment {
 
         runnable = new CountDownRunner();
         myThread= new Thread(runnable);
-        loadSongMethod(view);
 
         volumeButton = (ImageButton) view.findViewById(R.id.speakerimageButton);
         volume = (VerticalSeekBar) view.findViewById(R.id.volumeseekBar);
@@ -136,7 +135,6 @@ public class BeatFragment extends Fragment {
         volumeSeekBarMethod();
 
         playMethod(view);
-        stopMethod(view);
         micMethod(view);
 
         kickButton = (Button) view.findViewById(R.id.kickbutton);
@@ -153,7 +151,7 @@ public class BeatFragment extends Fragment {
         return view;
     }
 
-    private void selectBeatMethod(Button button) {
+    private void selectBeatMethod(final Button button) {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -165,25 +163,14 @@ public class BeatFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showPopup();
-                Toast.makeText(getContext(),"Aww Bitch",Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private void loadSongMethod(View view) {
-        song = MediaPlayer.create(view.getContext(), R.raw.loop);
-        musicButton = (ImageButton)view.findViewById(R.id.musicimageButton);
-        musicButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(playMusic){
-                    song.start();
+                Toast.makeText(getContext(),"Hello World!",Toast.LENGTH_LONG).show();
+                if(kickBoolean){
+                    button.setTextColor(Color.RED);
                 }
-                else{
-                    song.pause();
+                else {
+                    button.setTextColor(Color.rgb(105,26,153));
                 }
-                playMusic = !playMusic;
+                kickBoolean = !kickBoolean;
             }
         });
     }
@@ -309,22 +296,6 @@ public class BeatFragment extends Fragment {
                     //micButton.setBackgroundColor(R.color.colorPrimary);
                 }
                 micBoolean = !micBoolean;
-            }
-        });
-    }
-
-    private void stopMethod(View view) {
-        stopButton = (ImageButton)view.findViewById(R.id.stopimageButton);
-        stopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(stopBoolean){
-                    stopButton.setBackgroundColor(Color.RED);
-                }
-                else {
-                    stopButton.setBackgroundColor(Color.RED);
-                }
-                stopBoolean = !stopBoolean;
             }
         });
     }
