@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Inethi</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile">Profile</string>
+    <string name="download">Download</string>
+    <string name="upload">Upload</string>
+    <string name="beat">Beat</string>
+    <string name="settings">settings</string>
+    <string name="artist_name">Artist Name</string>
+    <string name="bio">Bio</string>
+    <string name="log_in">Login</string>
+    <string name="register">Register</string>
+
+    <string name="title_activity_beat">BeatActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="recent">Inspired by your recent listening</string>
+    <string name="projects">Projects</string>
+    <string name="favourite">Your favourite songs</string>
+    <string name="recent_beats">Your recent beats</string>
+    <string name="save">Save</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="duration">04:20</string>
+    <string name="size">10MB</string>
+    <string name="song_name">Song Name</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="skip">Skip</string>
+    <string name="username_hint">Username or Email</string>
+    <string name="username">Username</string>
+    <string name="clap">Clap</string>
+    <string name="hihat">Hihat</string>
+    <string name="kick">Kick</string>
+    <string name="snare">Snare</string>
+    <string name="frequency">Frequency</string>
+    <string name="tempo">Tempo</string>
+    <string name="volume">Volume</string>
+    <string name="music">Music</string>
+    <string name="downloading">Downloading..</string>
+    <string name="uploading">Uploading..</string>
+    <string name="sharing">Sharing..</string>
+    <string name="close">Close</string>
+    <string name="created_beats">Created Beats</string>
+    <string name="default_beats">Default Beats</string>
+    <string name="downloaded_beats">Downloaded Beats</string>
+    <string name="select_a_beat">Select A Beat</string>
+    <string name="share">SHARE</string>
+</resources>

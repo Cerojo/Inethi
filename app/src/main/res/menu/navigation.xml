@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/profile"
+        android:title="@string/profile" />
+
+    <item
+        android:id="@+id/navigation_beat"
+        android:icon="@drawable/beat"
+        android:title="@string/beat" />
+
+    <item
+        android:id="@+id/navigation_download"
+        android:icon="@drawable/download"
+        android:title="@string/download" />
+
+    <item
+        android:id="@+id/navigation_upload"
+        android:icon="@drawable/upload"
+        android:title="@string/upload" />
+
+    <item
+        android:id="@+id/navigation_music"
+        android:icon="@drawable/music"
+        android:title="@string/music" />
+
+</menu>

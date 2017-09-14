@@ -1,0 +1,78 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profileFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:orientation="vertical"
+    tools:context="layout.ProfileFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:contentDescription=""
+                app:srcCompat="@drawable/profilepicture"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/artistNametextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/artist_name" />
+
+            <EditText
+                android:id="@+id/artistNameeditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Inethi" />
+
+            <TextView
+                android:id="@+id/biotextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bio" />
+
+            <EditText
+                android:id="@+id/bioeditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:text="Inethi is a community-based wireless project based in Masiphumelele and Ocean View. As part of this project we will develop and offer localized &quot;cloudlet&quot; apps for and with the community, enabling easier sharing and authoring of locally created content. For the music authoring platform, you will develop a server (in the form of a virtual machine or docker) that will be accessible via web interface and an android app. The server should host and allow publishing and downloading of local artists' music, as well as download of creative commons-licensed beats that can be used for authoring hip hop music. The client will allow upload of music as well as composition of new music using the downloadable resources and other tools." />
+
+            <Button
+                android:id="@+id/savebutton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save" />
+
+            <Button
+                android:id="@+id/signoutbutton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_out" />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
