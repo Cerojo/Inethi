@@ -137,6 +137,8 @@ public class BeatFragment extends Fragment {
         playMethod(view);
         micMethod(view);
 
+        musicButtonEventListener(view);
+
         kickButton = (Button) view.findViewById(R.id.kickbutton);
         selectBeatMethod(kickButton);
         hihatButton = (Button) view.findViewById(R.id.hihatbutton);
@@ -151,11 +153,27 @@ public class BeatFragment extends Fragment {
         return view;
     }
 
+    private void musicButtonEventListener(View view) {
+        musicButton = (ImageButton)view.findViewById(R.id.musicimageButton);
+        musicButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showPopup();
+                return false;
+            }
+        });
+        musicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Bye World", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void selectBeatMethod(final Button button) {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showPopup();
                 return false;
             }
         });
@@ -239,11 +257,13 @@ public class BeatFragment extends Fragment {
             final View layout = inflater.inflate(R.layout.list_beats, (ViewGroup) getActivity().findViewById(R.id.listbeats));
             pw = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+            Close = (Button) layout.findViewById(R.id.close_popup);
+            Close.setOnClickListener(cancel_button);
 
             //----------------------------------------------------------
             //Load the recycler view
             defaultRecyclerView = (RecyclerView) layout.findViewById(R.id.defaultRecyclerView);
-            songAdapter = new SongAdapter(getContext(), 1, layout);
+            songAdapter = new SongAdapter(getContext(), 4, layout);
             defaultRecyclerView.setAdapter(songAdapter);
 
             //Change recycler view orientation
@@ -253,7 +273,7 @@ public class BeatFragment extends Fragment {
             //----------------------------------------------------------
             //Load the recycler view
             defaultRecyclerView = (RecyclerView) layout.findViewById(R.id.createdRecyclerView);
-            songAdapter = new SongAdapter(getContext(), 1, layout);
+            songAdapter = new SongAdapter(getContext(), 4, layout);
             defaultRecyclerView.setAdapter(songAdapter);
 
             //Change recycler view orientation
@@ -263,16 +283,13 @@ public class BeatFragment extends Fragment {
             //----------------------------------------------------------
             //Load the recycler view
             defaultRecyclerView = (RecyclerView) layout.findViewById(R.id.DownloadedRecyclerView);
-            songAdapter = new SongAdapter(getContext(), 1, layout);
+            songAdapter = new SongAdapter(getContext(), 4, layout);
             defaultRecyclerView.setAdapter(songAdapter);
 
             //Change recycler view orientation
             layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             defaultRecyclerView.setLayoutManager(layoutManager);
             //----------------------------------------------------------
-
-            Close = (Button) layout.findViewById(R.id.close_popup);
-            Close.setOnClickListener(cancel_button);
         } catch (Exception e) {
             e.printStackTrace();
         }

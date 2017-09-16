@@ -10,21 +10,20 @@ import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by cecilhlungwana on 2017/09/11.
+ * Created by cecilhlungwana on 2017/09/16.
  */
 
-class Music {
+public class Beats {
     private Context context;
-    private MediaPlayer music;
-    private ArrayList<HashMap<String,String>> songList;
-    private final String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Inethi/Downloaded/";
+    private MediaPlayer beat;
+    private ArrayList<HashMap<String,String>> beatsList;
+    private final String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Inethi/Beats/Loaded/";
     private Boolean isPaused = false;
     private static int position = -1;
     private final String fileName = "file_name";
@@ -34,57 +33,57 @@ class Music {
     private boolean playButtonClicked = true;
     private float fileSize;
 
-    Music(Context context){
+    Beats(Context context){
         this.context = context;
-        songList = getPlayList(path);
+        beatsList = getPlayList(path);
     }
 
-    private void playMusic(){
-        if(!music.isPlaying()){
-            music.start();
+    private void playBeat(){
+        if(!beat.isPlaying()){
+            beat.start();
         }
     }
 
-    private void pauseMusic(){
-        if(music.isPlaying()){
-            music.pause();
+    private void pauseBeat(){
+        if(beat.isPlaying()){
+            beat.pause();
         }
     }
 
-    private void stopMusic(){
-        if(music.isPlaying()){
-            music.stop();
+    private void stopBeat(){
+        if(beat.isPlaying()){
+            beat.stop();
         }
     }
 
-    private boolean loadMusic(int pathIndex){
-        String musicPath = songList.get(pathIndex).get(filePath);
-        if((musicPath!=null) && (getPosition() != pathIndex)) {
-            if((music!=null) &&(music.isPlaying())){
-                stopMusic();
+    private boolean loadBeat(int pathIndex){
+        String beatPath = beatsList.get(pathIndex).get(filePath);
+        if((beatPath!=null) && (getPosition() != pathIndex)) {
+            if((beat!=null) &&(beat.isPlaying())){
+                stopBeat();
             }
-            music = MediaPlayer.create(context, Uri.parse(musicPath));
+            beat = MediaPlayer.create(context, Uri.parse(beatPath));
             setPosition(pathIndex);
             return true;
         }
         return false;
     }
 
-    MediaPlayer getMusic(){
-        return music;
+    MediaPlayer getBeat(){
+        return beat;
     }
 
     int getSize(){
-        return songList.size();
+        return beatsList.size();
     }
 
     String getArtistName(int nameIndex){
-        return songList.get(nameIndex).get(fileName);
+        return beatsList.get(nameIndex).get(fileName);
     }
 
     Bitmap getCoverArt(int pathIndex){
         android.media.MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        String path = songList.get(pathIndex).get(filePath);
+        String path = beatsList.get(pathIndex).get(filePath);
         Bitmap bitmap = null;
         if (path!=null) {
             mmr.setDataSource(path);
@@ -136,7 +135,7 @@ class Music {
     }
 
     private void setPosition(int position) {
-        Music.position = position;
+        Beats.position = position;
     }
 
     void playButtonEventListener(final SongViewHolder holder){
@@ -145,14 +144,14 @@ class Music {
             @Override
             public void onClick(View v) {
                 if(playButtonClicked) {
-                    loadMusic(holder.getAdapterPosition());
-                    playMusic();
+                    loadBeat(holder.getAdapterPosition());
+                    playBeat();
                     setPosition(holder.getAdapterPosition());
                     button.setImageResource(R.drawable.pause);
                 }
                 else{
                     button.setImageResource(R.drawable.play);
-                    pauseMusic();
+                    pauseBeat();
                 }
                 setPaused(playButtonClicked);
                 playButtonClicked = !playButtonClicked;
@@ -167,7 +166,7 @@ class Music {
             public void onClick(View v) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(songList.get(holder.getAdapterPosition()).get(filePath)));
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(beatsList.get(holder.getAdapterPosition()).get(filePath)));
                 sendIntent.setType(sendType);
                 holder.itemView.getContext().startActivity(Intent.createChooser(sendIntent, holder.itemView.getContext().getResources().getText(R.string.share)));
             }
@@ -175,8 +174,8 @@ class Music {
     }
 
     String getDuration(int duration){
-        String musicPath = songList.get(duration).get(filePath);
-        MediaPlayer mediaPlayer = MediaPlayer.create(context,Uri.parse(musicPath));
+        String beatPath = beatsList.get(duration).get(filePath);
+        MediaPlayer mediaPlayer = MediaPlayer.create(context,Uri.parse(beatPath));
         int min_to_sec = mediaPlayer.getDuration()/1000;
         int m = min_to_sec/60;
         int s = min_to_sec-m*60;
@@ -187,7 +186,7 @@ class Music {
     }
 
     String  getFileSize(int index) {
-        File file = new File(songList.get(index).get(filePath));
+        File file = new File(beatsList.get(index).get(filePath));
         this.fileSize = (float) (file.length()/1000000.0);
         return Math.round(fileSize * 100.0) / 100.0+"MB";
     }

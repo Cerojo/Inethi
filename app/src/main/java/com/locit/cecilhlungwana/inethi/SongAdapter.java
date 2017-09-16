@@ -10,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Created by cecilhlungwana on 2017/09/03.
  */
@@ -24,6 +21,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
     private SearchView musicSearchView;
     private int classID;
     private Music music;
+    private Beats beats;
     private View parentView;
 
     //Constructor
@@ -31,6 +29,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
         inflater = LayoutInflater.from(context);
         this.classID = classID;
         music = new Music(context);
+        beats = new Beats(context);
+
         this.parentView = view;
 
         musicSearchView = (SearchView) view.findViewById(R.id.musicsearchView); //Set up the search bar
@@ -61,6 +61,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
             case 3: //Music
                 musicSetup(holder, position);
                 break;
+            case 4:
+                beatSetup(holder, position);
+                break;
         }
     }
 
@@ -81,8 +84,35 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
             holder.getPlay_pause_ImageButton().setImageResource(R.drawable.pause);}
     }
 
+    private void beatSetup(SongViewHolder holder, int position) {
+        if(beats.getCoverArt(position)!=null) {holder.getSongCover().setImageBitmap(beats.getCoverArt(position));}
+        else{holder.getSongCover().setImageResource(R.drawable.musicicon);}
+
+        holder.getArtistName().setText(beats.getArtistName(position));
+        holder.getSongDuration().setText(beats.getDuration(position));
+        holder.getSongSize().setText(beats.getFileSize(position));
+        holder.getPlay_pause_ImageButton().setImageResource(R.drawable.play);
+        holder.getSongCover().setAdjustViewBounds(true);
+
+        holder.getDusImageButton().setImageResource(R.drawable.share); //Use share image icon
+        beats.playButtonEventListener(holder);
+        beats.shareButtonEventListener(holder);
+        if((beats.getBeat() != null) && (beats.getBeat().isPlaying()) && (position == beats.getPosition())){
+            holder.getPlay_pause_ImageButton().setImageResource(R.drawable.pause);}
+    }
+
     @Override
     public int getItemCount() {
-        return music.getSave();
+        switch (classID) {
+            case 1: //Download
+                break;
+            case 2: //Upload
+                break;
+            case 3: //Music
+                return music.getSize();
+            case 4:
+                return beats.getSize();
+        }
+        return -1;
     }
 }
