@@ -3,17 +3,20 @@ package layout;
 The beats fragment class handles the view
  */
 
+import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.net.Uri;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,14 +29,10 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.locit.cecilhlungwana.inethi.R;
-import com.locit.cecilhlungwana.inethi.Song;
 import com.locit.cecilhlungwana.inethi.SongAdapter;
 import com.locit.cecilhlungwana.inethi.VerticalSeekBar;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -108,6 +107,18 @@ public class BeatFragment extends Fragment {
     private boolean threadRunning = false;
     private Runnable runnable;
 
+    private int color = Color.rgb(105,26,153);
+
+    private static final String LOG_TAG = "AudioRecordTest";
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private static String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Inethi/Beats/Voice";
+    private MediaRecorder mRecorder = null;
+    private MediaPlayer mPlayer = null;
+
+    // Requesting permission to RECORD_AUDIO
+    private boolean permissionToRecordAccepted = false;
+    private String [] permissions = {Manifest.permission.RECORD_AUDIO};
+
     public BeatFragment() {
         // Required empty public constructor
     }
@@ -119,6 +130,10 @@ public class BeatFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_beat, container, false);
         beatsBar = (SeekBar)view.findViewById(R.id.loopseekBar);
+
+        // Record to the external cache directory for visibility
+        mFileName += "/audiorecordtest.MPEG_4";
+        ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
 
         kickSound = MediaPlayer.create(view.getContext(), beats[0]);
         hihatSound = MediaPlayer.create(view.getContext(), beats[1]);
@@ -186,8 +201,9 @@ public class BeatFragment extends Fragment {
                     button.setTextColor(Color.RED);
                 }
                 else {
-                    button.setTextColor(Color.rgb(105,26,153));
+                    button.setTextColor(color);
                 }
+                onPlay(kickBoolean);
                 kickBoolean = !kickBoolean;
             }
         });
@@ -307,11 +323,13 @@ public class BeatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(micBoolean){
-                    //micButton.setBackgroundColor(android.R.color.holo_red_dark);
+                    micButton.setColorFilter(Color.RED);
+
                 }
                 else{
-                    //micButton.setBackgroundColor(R.color.colorPrimary);
+                    micButton.setColorFilter(color);
                 }
+                onRecord(micBoolean);
                 micBoolean = !micBoolean;
             }
         });
@@ -424,5 +442,71 @@ public class BeatFragment extends Fragment {
                 }catch(Exception ignored){}
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case REQUEST_RECORD_AUDIO_PERMISSION:
+                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToRecordAccepted ) getActivity().finish();
+
+    }
+
+    private void onRecord(boolean start) {
+        if (start) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+    }
+
+    private void onPlay(boolean start) {
+        if (start) {
+            startPlaying();
+        } else {
+            stopPlaying();
+        }
+    }
+
+    private void startPlaying() {
+        mPlayer = new MediaPlayer();
+        try {
+            mPlayer.setDataSource(mFileName);
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+    }
+
+    private void stopPlaying() {
+        mPlayer.release();
+        mPlayer = null;
+    }
+
+    private void startRecording() {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mRecorder.setOutputFile(mFileName);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+
+        mRecorder.start();
+    }
+
+    private void stopRecording() {
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
     }
 }
