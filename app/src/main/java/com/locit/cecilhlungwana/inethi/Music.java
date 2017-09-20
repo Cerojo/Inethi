@@ -24,7 +24,7 @@ class Music {
     private Context context;
     private MediaPlayer music;
     private ArrayList<HashMap<String,String>> songList;
-    private final String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Inethi/Downloaded/";
+    private final String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Inethi/Download/";
     private Boolean isPaused = false;
     private static int position = -1;
     private final String fileName = "file_name";

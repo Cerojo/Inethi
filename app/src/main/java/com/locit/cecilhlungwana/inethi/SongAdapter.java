@@ -8,7 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by cecilhlungwana on 2017/09/03.
@@ -25,13 +29,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
     private View parentView;
 
     //Constructor
-    public SongAdapter(Context context, int classID, View view){
+    public SongAdapter(Context context, int classID, View view, View parentView){
         inflater = LayoutInflater.from(context);
         this.classID = classID;
         music = new Music(context);
         beats = new Beats(context);
 
-        this.parentView = view;
+        this.parentView = parentView;
 
         musicSearchView = (SearchView) view.findViewById(R.id.musicsearchView); //Set up the search bar
         musicSearchView.setIconified(false);
@@ -64,6 +68,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
             case 4:
                 beatSetup(holder, position);
                 break;
+            case 5:
+                beatSetup(holder, position);
+                break;
         }
     }
 
@@ -84,7 +91,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
             holder.getPlay_pause_ImageButton().setImageResource(R.drawable.pause);}
     }
 
-    private void beatSetup(SongViewHolder holder, int position) {
+    private void beatSetup(final SongViewHolder holder, int position) {
         if(beats.getCoverArt(position)!=null) {holder.getSongCover().setImageBitmap(beats.getCoverArt(position));}
         else{holder.getSongCover().setImageResource(R.drawable.musicicon);}
 
@@ -96,7 +103,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
 
         holder.getDusImageButton().setImageResource(R.drawable.share); //Use share image icon
         beats.playButtonEventListener(holder);
-        beats.shareButtonEventListener(holder);
+        //beats.shareButtonEventListener(holder);
+
+        final TextView textView = (TextView)parentView.findViewById(R.id.somethingtextView);
+        ImageButton button = holder.getDusImageButton();
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.setText("Hello Bitches");
+            }
+        });
+
         if((beats.getBeat() != null) && (beats.getBeat().isPlaying()) && (position == beats.getPosition())){
             holder.getPlay_pause_ImageButton().setImageResource(R.drawable.pause);}
     }
@@ -112,6 +129,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
                 return music.getSize();
             case 4:
                 return beats.getSize();
+            case 5:
+                return 50;
         }
         return -1;
     }

@@ -7,6 +7,7 @@ package com.locit.cecilhlungwana.inethi;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.List;
 
 import layout.LoginFragment;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private final String uploadString = "Search song to Upload";
     private final String downloadString = "Search song to Download";
     private TextView mTextMessage;
+    private File mainDirectory = Environment.getExternalStorageDirectory();
 
     /*
     Method that handlers Navigation Listener and Fragment Change
@@ -118,5 +121,49 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        createFolders();
+    }
+
+    private void createFolders(){
+        File inethiFolder = new File(mainDirectory+ "/Inethi/");
+        if(!inethiFolder.exists()){
+            inethiFolder.mkdir();
+        }
+
+        File beatsFolder = new File(mainDirectory+ "/Inethi/Beats/");
+        if(!beatsFolder.exists()){
+            beatsFolder.mkdir();
+        }
+
+        File createdFolder = new File(mainDirectory+ "/Inethi/Beats/Create/");
+        if(!createdFolder.exists()){
+            createdFolder.mkdir();
+        }
+
+        File downloadedFolder = new File(mainDirectory+ "/Inethi/Beats/Download/");
+        if(!downloadedFolder.exists()){
+            downloadedFolder.mkdir();
+        }
+
+        File loadedFolder = new File(mainDirectory+ "/Inethi/Beats/Load/");
+        if(!loadedFolder.exists()){
+            loadedFolder.mkdir();
+        }
+
+        File voiceFolder = new File(mainDirectory+ "/Inethi/Beats/Voice/");
+        if(!voiceFolder.exists()){
+            voiceFolder.mkdir();
+        }
+
+        File downloadFolder = new File(mainDirectory+ "/Inethi/Download");
+        if(!downloadFolder.exists()){
+            downloadFolder.mkdir();
+        }
+
+        File userFolder = new File(mainDirectory+ "/Inethi/User");
+        if(!userFolder.exists()){
+            userFolder.mkdir();
+        }
     }
 }

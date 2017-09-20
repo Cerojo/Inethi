@@ -23,7 +23,7 @@ public class Beats {
     private Context context;
     private MediaPlayer beat;
     private ArrayList<HashMap<String,String>> beatsList;
-    private final String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Inethi/Beats/Loaded/";
+    private final String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Inethi/Beats/Load/";
     private Boolean isPaused = false;
     private static int position = -1;
     private final String fileName = "file_name";
@@ -32,6 +32,12 @@ public class Beats {
     private final String sendType = "audio/mpeg";
     private boolean playButtonClicked = true;
     private float fileSize;
+
+    private int[] hiHats = {R.raw.hh1, R.raw.hh2, R.raw.hh3, R.raw.hh4, R.raw.hh5, R.raw.hh6, R.raw.hh7, R.raw.hh8, R.raw.hh9, R.raw.hh10};
+    private int[] kicks = {R.raw.k1, R.raw.k2, R.raw.k3, R.raw.k4, R.raw.k5, R.raw.k6, R.raw.k7, R.raw.k8, R.raw.k9, R.raw.k10};
+    private int[] percussions = {R.raw.p1, R.raw.p2, R.raw.p3, R.raw.p4, R.raw.p5, R.raw.p6, R.raw.p7, R.raw.p8, R.raw.p9, R.raw.p10};
+    private int[] snares = {R.raw.s1, R.raw.s2, R.raw.s3, R.raw.s4, R.raw.s5,R.raw.s6, R.raw.s7, R.raw.s8, R.raw.s9, R.raw.s10};
+    private int[] toms = {R.raw.t1, R.raw.t2, R.raw.t3, R.raw.t4, R.raw.t5, R.raw.t6, R.raw.t7, R.raw.t8, R.raw.t9, R.raw.t10};
 
     Beats(Context context){
         this.context = context;

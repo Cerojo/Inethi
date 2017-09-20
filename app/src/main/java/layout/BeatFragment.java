@@ -119,6 +119,11 @@ public class BeatFragment extends Fragment {
     private boolean permissionToRecordAccepted = false;
     private String [] permissions = {Manifest.permission.RECORD_AUDIO};
 
+    private PopupWindow pw;
+    private View view = null;
+
+    private final static int MAX_VOLUME = 100;
+
     public BeatFragment() {
         // Required empty public constructor
     }
@@ -128,11 +133,11 @@ public class BeatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_beat, container, false);
+        view = inflater.inflate(R.layout.fragment_beat, container, false);
         beatsBar = (SeekBar)view.findViewById(R.id.loopseekBar);
 
         // Record to the external cache directory for visibility
-        mFileName += "/audiorecordtest.MPEG_4";
+        mFileName += "/audio.MPEG_4";
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
 
         kickSound = MediaPlayer.create(view.getContext(), beats[0]);
@@ -145,23 +150,20 @@ public class BeatFragment extends Fragment {
 
         volumeButton = (ImageButton) view.findViewById(R.id.speakerimageButton);
         volume = (VerticalSeekBar) view.findViewById(R.id.volumeseekBar);
-
         VolumeButtonMethod();
         volumeSeekBarMethod();
-
         playMethod(view);
         micMethod(view);
-
         musicButtonEventListener(view);
 
         kickButton = (Button) view.findViewById(R.id.kickbutton);
-        selectBeatMethod(kickButton);
+        selectBeatMethod1(kickButton);
         hihatButton = (Button) view.findViewById(R.id.hihatbutton);
-        selectBeatMethod(hihatButton);
+        selectBeatMethod2(hihatButton);
         clapButton = (Button) view.findViewById(R.id.clapbutton);
-        selectBeatMethod(clapButton);
+        selectBeatMethod3(clapButton);
         snareButton = (Button) view.findViewById(R.id.snarebutton);
-        selectBeatMethod(snareButton);
+        selectBeatMethod4(snareButton);
 
         //Load beats to the toggle buttons
         loadBeats(view);
@@ -185,7 +187,7 @@ public class BeatFragment extends Fragment {
         });
     }
 
-    private void selectBeatMethod(final Button button) {
+    private void selectBeatMethod1(final Button button) {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -196,15 +198,83 @@ public class BeatFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"Hello World!",Toast.LENGTH_LONG).show();
                 if(kickBoolean){
                     button.setTextColor(Color.RED);
                 }
                 else {
                     button.setTextColor(color);
                 }
-                onPlay(kickBoolean);
+                //onPlay(kickBoolean);
                 kickBoolean = !kickBoolean;
+            }
+        });
+    }
+
+    private void selectBeatMethod2(final Button button) {
+        button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(hihatBoolean){
+                    button.setTextColor(Color.RED);
+                }
+                else {
+                    button.setTextColor(color);
+                }
+                //onPlay(hihatBoolean);
+                hihatBoolean = !hihatBoolean;
+            }
+        });
+    }
+
+    private void selectBeatMethod3(final Button button) {
+        button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(clapBoolean){
+                    button.setTextColor(Color.RED);
+                }
+                else {
+                    button.setTextColor(color);
+                }
+                //onPlay(clapBoolean);
+                clapBoolean = !clapBoolean;
+            }
+        });
+    }
+
+    private void selectBeatMethod4(final Button button) {
+        button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(snareBoolean){
+                    button.setTextColor(Color.RED);
+                }
+                else {
+                    button.setTextColor(color);
+                }
+                //onPlay(snareBoolean);
+                snareBoolean = !snareBoolean;
             }
         });
     }
@@ -266,7 +336,6 @@ public class BeatFragment extends Fragment {
         }
     }
 
-    private PopupWindow pw;
     private void showPopup() {
         try {
             LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -279,7 +348,7 @@ public class BeatFragment extends Fragment {
             //----------------------------------------------------------
             //Load the recycler view
             defaultRecyclerView = (RecyclerView) layout.findViewById(R.id.defaultRecyclerView);
-            songAdapter = new SongAdapter(getContext(), 4, layout);
+            songAdapter = new SongAdapter(getContext(), 4, layout, view);
             defaultRecyclerView.setAdapter(songAdapter);
 
             //Change recycler view orientation
@@ -289,7 +358,7 @@ public class BeatFragment extends Fragment {
             //----------------------------------------------------------
             //Load the recycler view
             defaultRecyclerView = (RecyclerView) layout.findViewById(R.id.createdRecyclerView);
-            songAdapter = new SongAdapter(getContext(), 4, layout);
+            songAdapter = new SongAdapter(getContext(), 4, layout, view);
             defaultRecyclerView.setAdapter(songAdapter);
 
             //Change recycler view orientation
@@ -299,7 +368,7 @@ public class BeatFragment extends Fragment {
             //----------------------------------------------------------
             //Load the recycler view
             defaultRecyclerView = (RecyclerView) layout.findViewById(R.id.DownloadedRecyclerView);
-            songAdapter = new SongAdapter(getContext(), 4, layout);
+            songAdapter = new SongAdapter(getContext(), 4, layout, view);
             defaultRecyclerView.setAdapter(songAdapter);
 
             //Change recycler view orientation
@@ -406,6 +475,20 @@ public class BeatFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 try {
+                    float vol = (float) (1 - (Math.log(MAX_VOLUME - volume.getProgress()*10) / Math.log(MAX_VOLUME)));
+                    if(!kickBoolean){
+                        kickSound.setVolume(vol, vol);
+                    }
+                    if(!hihatBoolean){
+                        hihatSound.setVolume(vol, vol);
+                    }
+                    if(!clapBoolean){
+                        clapSound.setVolume(vol, vol);
+                    }
+                    if(!snareBoolean){
+                        snareSound.setVolume(vol, vol);
+                    }
+
                     if(kickInputs[seekbarInt] == 1){
                         kickSound.start();
                     }
