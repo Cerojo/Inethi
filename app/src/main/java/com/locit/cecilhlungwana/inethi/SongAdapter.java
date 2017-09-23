@@ -12,7 +12,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import layout.BeatFragment;
 
 /**
  * Created by cecilhlungwana on 2017/09/03.
@@ -26,6 +27,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
     private int classID;
     private Music music;
     private Beats beats;
+    private Voice voice;
     private View parentView;
 
     //Constructor
@@ -34,6 +36,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
         this.classID = classID;
         music = new Music(context);
         beats = new Beats(context);
+        voice = new Voice(context);
 
         this.parentView = parentView;
 
@@ -56,66 +59,69 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
     @Override
     public void onBindViewHolder(final SongViewHolder holder, final int position) {
         /*Song song = songs.get(position); //Get information of song at current position*/
-
+        Button button;
         switch (classID) {
             case 1: //Download
                 break;
             case 2: //Upload
                 break;
             case 3: //Music
-                musicSetup(holder, position);
+                soundSetup(holder, music, position);
                 break;
             case 4:
-                beatSetup(holder, position);
+                button = (Button)parentView.findViewById(R.id.button1);
+                beatSetup(holder, position, button);
                 break;
             case 5:
-                beatSetup(holder, position);
+                button = (Button)parentView.findViewById(R.id.button2);
+                beatSetup(holder, position, button);
+                break;
+            case 6:
+                button = (Button)parentView.findViewById(R.id.button3);
+                beatSetup(holder, position, button);
+                break;
+            case 7:
+                button = (Button)parentView.findViewById(R.id.button4);
+                beatSetup(holder, position, button);
+                break;
+            case 8:
+                holder.getDusImageButton().setImageResource(R.drawable.select);
+                soundSetup(holder,voice,position);
                 break;
         }
     }
 
-    private void musicSetup(SongViewHolder holder, int position) {
-        if(music.getCoverArt(position)!=null) {holder.getSongCover().setImageBitmap(music.getCoverArt(position));}
+    private void soundSetup(SongViewHolder holder, Sound sound, int position) {
+        if(sound.getCoverArt(position)!=null) {holder.getSongCover().setImageBitmap(sound.getCoverArt(position));}
         else{holder.getSongCover().setImageResource(R.drawable.musicicon);}
 
-        holder.getArtistName().setText(music.getArtistName(position));
-        holder.getSongDuration().setText(music.getDuration(position));
-        holder.getSongSize().setText(music.getFileSize(position));
+        holder.getArtistName().setText(sound.getFileName(position));
+        holder.getSongDuration().setText(sound.getDuration(position));
+        holder.getSongSize().setText(sound.getFileSize(position));
         holder.getPlay_pause_ImageButton().setImageResource(R.drawable.play);
         holder.getSongCover().setAdjustViewBounds(true);
 
-        holder.getDusImageButton().setImageResource(R.drawable.share); //Use share image icon
-        music.playButtonEventListener(holder);
-        music.shareButtonEventListener(holder);
-        if((music.getMusic() != null) && (music.getMusic().isPlaying()) && (position == music.getPosition())){
+        //holder.getDusImageButton().setImageResource(R.drawable.share); //Use share image icon
+        sound.playButtonEventListener(holder);
+        sound.shareButtonEventListener(holder);
+        if((sound.getSound() != null) && (sound.getSound().isPlaying()) && (position == sound.getPosition())){
             holder.getPlay_pause_ImageButton().setImageResource(R.drawable.pause);}
     }
 
-    private void beatSetup(final SongViewHolder holder, int position) {
-        if(beats.getCoverArt(position)!=null) {holder.getSongCover().setImageBitmap(beats.getCoverArt(position));}
-        else{holder.getSongCover().setImageResource(R.drawable.musicicon);}
-
-        holder.getArtistName().setText(beats.getArtistName(position));
+    private void beatSetup(final SongViewHolder holder, final int position, final Button button) {
+        holder.getArtistName().setText(beats.getFileName(position));
+        holder.getSongCover().setImageResource(R.drawable.musicicon);
         holder.getSongDuration().setText(beats.getDuration(position));
-        holder.getSongSize().setText(beats.getFileSize(position));
-        holder.getPlay_pause_ImageButton().setImageResource(R.drawable.play);
-        holder.getSongCover().setAdjustViewBounds(true);
-
-        holder.getDusImageButton().setImageResource(R.drawable.share); //Use share image icon
+        holder.getSongSize().setText("Select");
         beats.playButtonEventListener(holder);
-        //beats.shareButtonEventListener(holder);
-
-        final TextView textView = (TextView)parentView.findViewById(R.id.somethingtextView);
-        ImageButton button = holder.getDusImageButton();
-        button.setOnClickListener(new View.OnClickListener() {
+        holder.getDusImageButton().setImageResource(R.drawable.select);
+        holder.getDusImageButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textView.setText("Hello Bitches");
+                button.setText(beats.getFileName(position));
+                BeatFragment.beats[0] = beats.getBeat(position);
             }
         });
-
-        if((beats.getBeat() != null) && (beats.getBeat().isPlaying()) && (position == beats.getPosition())){
-            holder.getPlay_pause_ImageButton().setImageResource(R.drawable.pause);}
     }
 
     @Override
@@ -130,7 +136,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
             case 4:
                 return beats.getSize();
             case 5:
-                return 50;
+                return beats.getSize();
+            case 6:
+                return beats.getSize();
+            case 7:
+                return beats.getSize();
+            case 8:
+                return voice.getSize();
         }
         return -1;
     }

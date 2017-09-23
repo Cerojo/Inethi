@@ -20,7 +20,26 @@ import java.util.HashMap;
  * Created by cecilhlungwana on 2017/09/11.
  */
 
-class Music {
+class Music extends Sound {
+
+    Music(Context context) {
+        this.context = context;
+        setup();
+    }
+
+    @Override
+    public void setup() {
+        setPath("Download/");
+        setEndWith(".mp3");
+        soundList = getPlayList(getPath());
+    }
+
+    @Override
+    public void shareButtonEventListener(SongViewHolder holder) {
+
+    }
+}
+    /*{
     private Context context;
     private MediaPlayer music;
     private ArrayList<HashMap<String,String>> songList;
@@ -75,7 +94,12 @@ class Music {
     }
 
     int getSize(){
-        return songList.size();
+        try {
+            return songList.size();
+        }
+        catch (NullPointerException e){
+            return -1;
+        }
     }
 
     String getArtistName(int nameIndex){
@@ -191,4 +215,4 @@ class Music {
         this.fileSize = (float) (file.length()/1000000.0);
         return Math.round(fileSize * 100.0) / 100.0+"MB";
     }
-}
+}*/

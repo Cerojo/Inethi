@@ -63,28 +63,214 @@ public class Beats {
     }
 
     private boolean loadBeat(int pathIndex){
-        String beatPath = beatsList.get(pathIndex).get(filePath);
-        if((beatPath!=null) && (getPosition() != pathIndex)) {
-            if((beat!=null) &&(beat.isPlaying())){
-                stopBeat();
-            }
-            beat = MediaPlayer.create(context, Uri.parse(beatPath));
-            setPosition(pathIndex);
-            return true;
+        if((beat!=null) &&(beat.isPlaying())){
+            stopBeat();
         }
-        return false;
+        if(pathIndex >= 0 && pathIndex < 10){
+            beat = MediaPlayer.create(context,hiHats[pathIndex]);
+        }
+        if(pathIndex >= 10 && pathIndex < 20){
+            pathIndex -= 10;
+            beat = MediaPlayer.create(context,kicks[pathIndex]);
+        }
+        if(pathIndex >= 20 && pathIndex < 30){
+            pathIndex -= 20;
+            beat = MediaPlayer.create(context,percussions[pathIndex]);
+        }
+        if(pathIndex >= 30 && pathIndex < 40){
+            pathIndex -= 30;
+            beat = MediaPlayer.create(context,snares[pathIndex]);
+        }
+        if(pathIndex >= 40 && pathIndex < 50){
+            pathIndex -= 40;
+            beat = MediaPlayer.create(context,toms[pathIndex]);
+        }
+        setPosition(pathIndex);
+        return true;
     }
 
-    MediaPlayer getBeat(){
-        return beat;
+    int getBeat(int beatAt){
+        if(beatAt >= 0 && beatAt < 10){
+            return hiHats[beatAt];
+        }
+        if(beatAt >= 10 && beatAt < 20){
+            beatAt -= 10;
+            return kicks[beatAt];
+        }
+        if(beatAt >= 20 && beatAt < 30){
+            beatAt -= 20;
+            return percussions[beatAt];
+        }
+        if(beatAt >= 30 && beatAt < 40){
+            beatAt -= 30;
+            return snares[beatAt];
+        }
+        if(beatAt >= 40 && beatAt < 50){
+            beatAt -= 40;
+            return toms[beatAt];
+        }
+        return -1;
     }
 
     int getSize(){
-        return beatsList.size();
+        return hiHats.length + kicks.length + percussions.length + snares.length + toms.length;
     }
 
-    String getArtistName(int nameIndex){
-        return beatsList.get(nameIndex).get(fileName);
+    String getFileName(int nameIndex){
+        String fileName = "";
+        switch (nameIndex){
+            case 0:
+                fileName = "Hi-hat 1";
+                break;
+            case 1:
+                fileName = "Hi-hat 2";
+                break;
+            case 2:
+                fileName = "Hi-hat 3";
+                break;
+            case 3:
+                fileName = "Hi-hat 4";
+                break;
+            case 4:
+                fileName = "Hi-hat 5";
+                break;
+            case 5:
+                fileName = "Hi-hat 6";
+                break;
+            case 6:
+                fileName = "Hi-hat 7";
+                break;
+            case 7:
+                fileName = "Hi-hat 8";
+                break;
+            case 8:
+                fileName = "Hi-hat 9";
+                break;
+            case 9:
+                fileName = "Hi-hat 10";
+                break;
+            case 10:
+                fileName = "Kick 1";
+                break;
+            case 11:
+                fileName = "Kick 2";
+                break;
+            case 12:
+                fileName = "Kick 3";
+                break;
+            case 13:
+                fileName = "Kick 4";
+                break;
+            case 14:
+                fileName = "Kick 5";
+                break;
+            case 15:
+                fileName = "Kick 6";
+                break;
+            case 16:
+                fileName = "Kick 7";
+                break;
+            case 17:
+                fileName = "Kick 8";
+                break;
+            case 18:
+                fileName = "Kick 9";
+                break;
+            case 19:
+                fileName = "Kick 10";
+                break;
+            case 20:
+                fileName = "Percussion 1";
+                break;
+            case 21:
+                fileName = "Percussion 2";
+                break;
+            case 22:
+                fileName = "Percussion 3";
+                break;
+            case 23:
+                fileName = "Percussion 4";
+                break;
+            case 24:
+                fileName = "Percussion 5";
+                break;
+            case 25:
+                fileName = "Percussion 6";
+                break;
+            case 26:
+                fileName = "Percussion 7";
+                break;
+            case 27:
+                fileName = "Percussion 8";
+                break;
+            case 28:
+                fileName = "Percussion 9";
+                break;
+            case 29:
+                fileName = "Percussion 10";
+                break;
+            case 30:
+                fileName = "Snare 1";
+                break;
+            case 31:
+                fileName = "Snare 2";
+                break;
+            case 32:
+                fileName = "Snare 3";
+                break;
+            case 33:
+                fileName = "Snare 4";
+                break;
+            case 34:
+                fileName = "Snare 5";
+                break;
+            case 35:
+                fileName = "Snare 6";
+                break;
+            case 36:
+                fileName = "Snare 7";
+                break;
+            case 37:
+                fileName = "Snare 8";
+                break;
+            case 38:
+                fileName = "Snare 9";
+                break;
+            case 39:
+                fileName = "Snare 10";
+                break;
+            case 40:
+                fileName = "Toms 1";
+                break;
+            case 41:
+                fileName = "Toms 2";
+                break;
+            case 42:
+                fileName = "Toms 3";
+                break;
+            case 43:
+                fileName = "Toms 4";
+                break;
+            case 44:
+                fileName = "Toms 5";
+                break;
+            case 45:
+                fileName = "Toms 6";
+                break;
+            case 46:
+                fileName = "Toms 7";
+                break;
+            case 47:
+                fileName = "Toms 8";
+                break;
+            case 48:
+                fileName = "Toms 9";
+                break;
+            case 49:
+                fileName = "Toms 10";
+                break;
+        }
+        return fileName;
     }
 
     Bitmap getCoverArt(int pathIndex){
@@ -180,8 +366,27 @@ public class Beats {
     }
 
     String getDuration(int duration){
-        String beatPath = beatsList.get(duration).get(filePath);
-        MediaPlayer mediaPlayer = MediaPlayer.create(context,Uri.parse(beatPath));
+        MediaPlayer mediaPlayer = null;
+        if(duration >= 0 && duration < 10){
+            mediaPlayer = MediaPlayer.create(context,hiHats[duration]);
+        }
+        if(duration >= 10 && duration < 20){
+            duration -= 10;
+            mediaPlayer = MediaPlayer.create(context,kicks[duration]);
+        }
+        if(duration >= 20 && duration < 30){
+            duration -= 20;
+            mediaPlayer = MediaPlayer.create(context,percussions[duration]);
+        }
+        if(duration >= 30 && duration < 40){
+            duration -= 30;
+            mediaPlayer = MediaPlayer.create(context,snares[duration]);
+        }
+        if(duration >= 40 && duration < 50){
+            duration -= 40;
+            mediaPlayer = MediaPlayer.create(context,toms[duration]);
+        }
+
         int min_to_sec = mediaPlayer.getDuration()/1000;
         int m = min_to_sec/60;
         int s = min_to_sec-m*60;

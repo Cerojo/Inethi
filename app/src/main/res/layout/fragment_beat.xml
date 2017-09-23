@@ -59,7 +59,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/kickbutton"
+                android:id="@+id/button1"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="15dp"
                 android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/clapbutton"
+                android:id="@+id/button2"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="15dp"
                 android:layout_height="wrap_content"
@@ -178,7 +178,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/hihatbutton"
+                android:id="@+id/button3"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="15dp"
                 android:layout_height="wrap_content"
@@ -240,7 +240,7 @@
             tools:ignore="NestedWeights">
 
             <Button
-                android:id="@+id/snarebutton"
+                android:id="@+id/button4"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="15dp"
                 android:layout_height="wrap_content"

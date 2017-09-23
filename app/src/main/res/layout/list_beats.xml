@@ -16,7 +16,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:ignore="UselessParent">
 
         <LinearLayout
@@ -40,7 +40,7 @@
                 android:layout_gravity="center"
                 android:text="@string/default_beats"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <android.support.v7.widget.RecyclerView
@@ -49,39 +49,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp" />
 
-            <TextView
-                android:id="@+id/createdtextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/created_beats"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/createdRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp" />
-
-            <TextView
-                android:id="@+id/downloadedtextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/downloaded_beats"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/DownloadedRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
             <Button
                 android:id="@+id/close_popup"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
