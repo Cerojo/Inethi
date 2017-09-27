@@ -7,8 +7,11 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,14 +30,20 @@ abstract class Sound implements SoundInterface{
     private static int position = -1;
     private float fileSize;
     private final String fileName = "file_name";
-    private final String filePath = "file_path";
+    final String filePath = "file_path";
     private String fileFormat;
     private MediaPlayer sound;
+    private ImageButton iButton;
+    private FragmentActivity activity;
+    Runnable runnable;
+    Thread myThread;
+    private int counter = 0;
+    private SongViewHolder viewHolder;
+    private boolean threadRunning = false;
+    private static boolean state = false;
 
     @Override
-    public void setup(){
-        soundList = getPlayList(getPath());
-    }
+    public void setup(){}
 
     public void setEndWith(String endWith){
         fileFormat = endWith;
@@ -90,15 +99,34 @@ abstract class Sound implements SoundInterface{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(playButtonClicked) {
+                if((sound!=null) && (sound.isPlaying()) && (holder.getAdapterPosition() != getPosition())){
+                    getImageView().setImageResource(R.drawable.play);
+                    viewHolder.getSongDuration().setText(getDuration(position));
+                    setPaused(playButtonClicked);
+                    playButtonClicked = !playButtonClicked;
+                    if(myThread!=null){
+                        threadRunning = false;
+                    }
+                }
+                if (playButtonClicked) {
+                    setImageView(button);
                     loadSound(holder.getAdapterPosition());
                     playSound();
                     setPosition(holder.getAdapterPosition());
                     button.setImageResource(R.drawable.pause);
-                }
-                else{
+                    viewHolder = holder;
+                    counter = 0;
+                    if(!state) {
+                        myThread.start();
+                        state = true;
+                    }
+                    threadRunning = true;
+                } else {
                     button.setImageResource(R.drawable.play);
                     pauseSound();
+                    if(myThread!=null){
+                        threadRunning = false;
+                    }
                 }
                 setPaused(playButtonClicked);
                 playButtonClicked = !playButtonClicked;
@@ -118,7 +146,7 @@ abstract class Sound implements SoundInterface{
 
     @Override
     public String getFileName(int index) {
-        return soundList.get(index).get(fileName);
+        return soundList.get(index).get(fileName).split(getEndWith())[0];
     }
 
     @Override
@@ -215,5 +243,61 @@ abstract class Sound implements SoundInterface{
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    private void setImageView(ImageButton button){
+        this.iButton = button;
+    }
+
+    private ImageButton getImageView(){
+        return iButton;
+    }
+
+    void setActivity(FragmentActivity activity){
+        this.activity = activity;
+    }
+
+    private FragmentActivity getActivity(){
+        return activity;
+    }
+
+    private void doWork() {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                String d;
+                int min_to_sec = getSound().getDuration()/1000 - counter;
+                if(min_to_sec >= 0) {
+                    int m = min_to_sec / 60;
+                    int s = min_to_sec - m * 60;
+                    if (s < 10) {
+                        d = m + ":0" + s;
+                    } else {
+                        d = m + ":" + s;
+                    }
+
+                    viewHolder.getSongDuration().setText(d);
+                    counter++;
+                }
+                else{
+                    threadRunning = false;
+                    counter = 0;
+                    getImageView().setImageResource(R.drawable.play);
+                    viewHolder.getSongDuration().setText(getDuration(position));
+                }
+            }
+        });
+    }
+
+    class CountDownRunner implements Runnable{
+        public void run() {
+            while(threadRunning){
+                try {
+                    doWork();
+                    Thread.sleep(1000); //522 - 750 BPM, Increment by 23
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }catch(Exception ignored){}
+            }
+        }
     }
 }

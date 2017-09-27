@@ -16,6 +16,8 @@ class Voice extends Sound {
 
     @Override
     public void setup(){
+        runnable = new CountDownRunner();
+        myThread = new Thread(runnable);
         setPath("Beats/Voice/");
         setEndWith(".MPEG_4");
         soundList = getPlayList(getPath());

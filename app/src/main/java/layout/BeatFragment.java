@@ -89,6 +89,7 @@ public class BeatFragment extends Fragment {
 
     private SeekBar beatsBar;
     private VerticalSeekBar volume;
+    private VerticalSeekBar tempo;
 
     //Toggle button IDs
     private int sound1Toggle[] = {R.id.k1toggleButton, R.id.k2toggleButton, R.id.k3toggleButton, R.id.k4toggleButton};
@@ -100,12 +101,11 @@ public class BeatFragment extends Fragment {
 
     private int seekForwardTime = 5 * 1000; // default 5 second
     private int seekBackwardTime = 5 * 1000; // default 5 second
-    private Thread myThread;
-    private boolean playMusic = true;
     private RecyclerView defaultRecyclerView;
     private SongAdapter songAdapter;
     private boolean threadRunning = false;
     private Runnable runnable;
+    private Thread myThread;
 
     private int color = Color.rgb(105,26,153);
 
@@ -124,8 +124,9 @@ public class BeatFragment extends Fragment {
 
     private final static int MAX_VOLUME = 100;
 
-    public BeatFragment() {}
+    private int bpm = 522;
 
+    public BeatFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,6 +142,8 @@ public class BeatFragment extends Fragment {
         sound3 = MediaPlayer.create(view.getContext(), beats[1]);
         sound2 = MediaPlayer.create(view.getContext(), beats[2]);
         sound4 = MediaPlayer.create(view.getContext(), beats[3]);
+
+        TempoSeekbarMethod();
 
         runnable = new CountDownRunner();
         myThread= new Thread(runnable);
@@ -173,6 +176,26 @@ public class BeatFragment extends Fragment {
         //Load beats to the toggle buttons
         loadBeats(view);
         return view;
+    }
+
+    private void TempoSeekbarMethod() {
+        tempo = (VerticalSeekBar)view.findViewById(R.id.temposeekBar);
+        tempo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                bpm = 522 + (progress)*23;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void musicButtonEventListener(View view) {
@@ -513,7 +536,7 @@ public class BeatFragment extends Fragment {
             while(threadRunning){//!Thread.currentThread().isInterrupted()){
                 try {
                     doWork();
-                    Thread.sleep(500);
+                    Thread.sleep(bpm); //522 - 750 BPM, Increment by 23
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }catch(Exception ignored){}

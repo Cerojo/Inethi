@@ -29,14 +29,26 @@ class Music extends Sound {
 
     @Override
     public void setup() {
+        runnable = new CountDownRunner();
+        myThread = new Thread(runnable);
         setPath("Download/");
         setEndWith(".mp3");
         soundList = getPlayList(getPath());
     }
 
     @Override
-    public void shareButtonEventListener(SongViewHolder holder) {
-
+    public void shareButtonEventListener(final SongViewHolder holder) {
+        final ImageButton button = holder.getDusImageButton();
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(soundList.get(holder.getAdapterPosition()).get(filePath)));
+                sendIntent.setType("audio/mpeg");
+                holder.itemView.getContext().startActivity(Intent.createChooser(sendIntent, holder.itemView.getContext().getResources().getText(R.string.share)));
+            }
+        });
     }
 }
     /*{

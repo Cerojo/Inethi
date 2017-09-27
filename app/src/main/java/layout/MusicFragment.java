@@ -39,6 +39,7 @@ public class MusicFragment extends Fragment{
         //Load the recycler view
         musicRecyclerView = (RecyclerView) view.findViewById(R.id.musicrecyclerView);
         songAdapter = new SongAdapter(getContext(), getMusicFragment(),view, null);
+        songAdapter.setActivity(getActivity());
         musicRecyclerView.setAdapter(songAdapter);
 
         //Change recycler view orientation

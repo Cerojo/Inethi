@@ -5,6 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     android:orientation="vertical"
     tools:context="com.locit.cecilhlungwana.inethi.MainActivity">
 
@@ -12,9 +13,10 @@
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primaryColor"
+        android:background="@android:color/transparent"
         android:text="@string/title_home"
         android:textAlignment="center"
+        android:textColor="@android:color/background_dark"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -37,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="?android:attr/windowBackground"
+        android:background="@android:color/transparent"
         app:menu="@menu/navigation" />
 
 </LinearLayout>

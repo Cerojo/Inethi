@@ -3,7 +3,9 @@ package com.locit.cecilhlungwana.inethi;
 Song Adapter Class
 This is will be used to load the song information in the recycler view.
  */
+import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import layout.BeatFragment;
 
@@ -29,6 +32,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
     private Beats beats;
     private Voice voice;
     private View parentView;
+    private FragmentActivity activity;
 
     //Constructor
     public SongAdapter(Context context, int classID, View view, View parentView){
@@ -66,6 +70,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
             case 2: //Upload
                 break;
             case 3: //Music
+                holder.getDusImageButton().setImageResource(R.drawable.share);
                 soundSetup(holder, music, position);
                 break;
             case 4:
@@ -94,14 +99,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
     private void soundSetup(SongViewHolder holder, Sound sound, int position) {
         if(sound.getCoverArt(position)!=null) {holder.getSongCover().setImageBitmap(sound.getCoverArt(position));}
         else{holder.getSongCover().setImageResource(R.drawable.musicicon);}
-
         holder.getArtistName().setText(sound.getFileName(position));
         holder.getSongDuration().setText(sound.getDuration(position));
         holder.getSongSize().setText(sound.getFileSize(position));
         holder.getPlay_pause_ImageButton().setImageResource(R.drawable.play);
         holder.getSongCover().setAdjustViewBounds(true);
 
-        //holder.getDusImageButton().setImageResource(R.drawable.share); //Use share image icon
         sound.playButtonEventListener(holder);
         sound.shareButtonEventListener(holder);
         if((sound.getSound() != null) && (sound.getSound().isPlaying()) && (position == sound.getPosition())){
@@ -145,5 +148,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
                 return voice.getSize();
         }
         return -1;
+    }
+
+    public void setActivity(FragmentActivity activity){
+        this.activity = activity;
+        music.setActivity(getActivity());
+    }
+
+    private FragmentActivity getActivity(){
+        return activity;
     }
 }

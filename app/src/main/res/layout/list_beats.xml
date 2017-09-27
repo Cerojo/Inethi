@@ -4,13 +4,16 @@
     android:id="@+id/listbeats"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
+    android:background="@drawable/background"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
     <SearchView
         android:id="@+id/musicsearchView"
+        android:iconifiedByDefault="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

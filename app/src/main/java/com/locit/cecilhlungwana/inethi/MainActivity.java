@@ -26,8 +26,6 @@ import layout.MusicFragment;
 public class MainActivity extends AppCompatActivity {
     //Private variable for class
     private int FRAGMENT_ID;
-    private final String uploadString = "Search song to Upload";
-    private final String downloadString = "Search song to Download";
     private TextView mTextMessage;
     private File mainDirectory = Environment.getExternalStorageDirectory();
 
@@ -121,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        BottomNavigationViewHelper.disableShiftMode(navigation);
 
         createFolders();
     }
