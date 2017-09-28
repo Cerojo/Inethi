@@ -3,7 +3,6 @@ package com.locit.cecilhlungwana.inethi;
 Song Adapter Class
 This is will be used to load the song information in the recycler view.
  */
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import layout.BeatFragment;
@@ -91,7 +88,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
                 break;
             case 8:
                 holder.getDusImageButton().setImageResource(R.drawable.select);
-                soundSetup(holder,voice,position);
+                soundSetup(holder, voice, position);
                 break;
         }
     }
@@ -106,7 +103,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
         holder.getSongCover().setAdjustViewBounds(true);
 
         sound.playButtonEventListener(holder);
-        sound.shareButtonEventListener(holder);
+        sound.mButtonEventListener(holder);
         if((sound.getSound() != null) && (sound.getSound().isPlaying()) && (position == sound.getPosition())){
             holder.getPlay_pause_ImageButton().setImageResource(R.drawable.pause);}
     }
@@ -122,7 +119,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
             @Override
             public void onClick(View v) {
                 button.setText(beats.getFileName(position));
-                BeatFragment.beats[0] = beats.getBeat(position);
+                //BeatFragment.beats[0] = beats.getBeat(position);
             }
         });
     }
@@ -153,6 +150,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
     public void setActivity(FragmentActivity activity){
         this.activity = activity;
         music.setActivity(getActivity());
+        voice.setActivity(getActivity());
     }
 
     private FragmentActivity getActivity(){

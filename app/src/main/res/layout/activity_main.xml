@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:text="@string/title_home"
         android:textAlignment="center"
         android:textColor="@android:color/background_dark"
         android:textSize="24sp"

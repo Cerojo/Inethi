@@ -37,7 +37,7 @@ class Music extends Sound {
     }
 
     @Override
-    public void shareButtonEventListener(final SongViewHolder holder) {
+    public void mButtonEventListener(final SongViewHolder holder) {
         final ImageButton button = holder.getDusImageButton();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,7 +196,7 @@ class Music extends Sound {
         });
     }
 
-    void shareButtonEventListener(final SongViewHolder holder){
+    void mButtonEventListener(final SongViewHolder holder){
         final ImageButton button = holder.getDusImageButton();
         button.setOnClickListener(new View.OnClickListener() {
             @Override

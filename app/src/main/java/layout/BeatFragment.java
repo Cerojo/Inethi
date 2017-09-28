@@ -7,8 +7,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -31,6 +33,7 @@ import android.widget.ToggleButton;
 import com.locit.cecilhlungwana.inethi.R;
 import com.locit.cecilhlungwana.inethi.SongAdapter;
 import com.locit.cecilhlungwana.inethi.VerticalSeekBar;
+import com.locit.cecilhlungwana.inethi.VisualizerView;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -129,8 +132,7 @@ public class BeatFragment extends Fragment {
     public BeatFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_beat, container, false);
         beatsBar = (SeekBar)view.findViewById(R.id.loopseekBar);
@@ -138,31 +140,17 @@ public class BeatFragment extends Fragment {
         // Record to the external cache directory for visibility
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
 
-        sound1 = MediaPlayer.create(view.getContext(), beats[0]);
-        sound3 = MediaPlayer.create(view.getContext(), beats[1]);
-        sound2 = MediaPlayer.create(view.getContext(), beats[2]);
-        sound4 = MediaPlayer.create(view.getContext(), beats[3]);
+        createMediaPlayer(0,0); //Loads the sound to the media player
+        TempoSeekbarMethod(); //Controls the Thread speed TEMPO
+        setupThreads(); //Creates a new thread
 
-        TempoSeekbarMethod();
-
-        runnable = new CountDownRunner();
-        myThread= new Thread(runnable);
-
-        volumeButton = (ImageButton) view.findViewById(R.id.speakerimageButton);
-        volume = (VerticalSeekBar) view.findViewById(R.id.volumeseekBar);
+        setupThread();
         VolumeButtonMethod();
         volumeSeekBarMethod();
         playMethod(view);
         micMethod(view);
         musicButtonEventListener(view);
-
-        Button saveButton = (Button) view.findViewById(R.id.savebutton);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPlay(true);
-            }
-        });
+        saveButtonCLickEvent();
 
         sound1Button = (Button) view.findViewById(R.id.button1);
         selectBeatMethod1(sound1Button);
@@ -176,6 +164,34 @@ public class BeatFragment extends Fragment {
         //Load beats to the toggle buttons
         loadBeats(view);
         return view;
+    }
+
+    private void saveButtonCLickEvent() {
+        Button saveButton = (Button) view.findViewById(R.id.savebutton);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPlay(true);
+            }
+        });
+    }
+
+    private void setupThread() {
+        volumeButton = (ImageButton) view.findViewById(R.id.speakerimageButton);
+        volume = (VerticalSeekBar) view.findViewById(R.id.volumeseekBar);
+    }
+
+    private void setupThreads() {
+        runnable = new CountDownRunner();
+        myThread= new Thread(runnable);
+    }
+
+    public void createMediaPlayer(int i , int id) {
+        sound1 = MediaPlayer.create(view.getContext(), beats[0]);
+        sound3 = MediaPlayer.create(view.getContext(), beats[1]);
+        sound2 = MediaPlayer.create(view.getContext(), beats[2]);
+        sound4 = MediaPlayer.create(view.getContext(), beats[3]);
+        loadBeats(view);
     }
 
     private void TempoSeekbarMethod() {
@@ -353,13 +369,13 @@ public class BeatFragment extends Fragment {
             k = (ToggleButton) view.findViewById(sound1Toggle[i]); //Find toggle button ID
             setBeat(k, sound1, sound1Inputs, i); //Load beat
         }
-        for (int i = 0; i < sound3Toggle.length; i++) {
-            h = (ToggleButton) view.findViewById(sound3Toggle[i]);
-            setBeat(h, sound3, sound3Inputs, i);
-        }
         for (int i = 0; i < sound2Toggle.length; i++) {
             c = (ToggleButton) view.findViewById(sound2Toggle[i]);
             setBeat(c, sound2, sound2Inputs, i);
+        }
+        for (int i = 0; i < sound3Toggle.length; i++) {
+            h = (ToggleButton) view.findViewById(sound3Toggle[i]);
+            setBeat(h, sound3, sound3Inputs, i);
         }
         for (int i = 0; i < sound4Toggle.length; i++) {
             s = (ToggleButton) view.findViewById(sound4Toggle[i]);
@@ -380,6 +396,7 @@ public class BeatFragment extends Fragment {
             //Load the recycler view
             defaultRecyclerView = (RecyclerView) layout.findViewById(R.id.defaultRecyclerView);
             songAdapter = new SongAdapter(getContext(), select, layout, view);
+            songAdapter.setActivity(getActivity());
             defaultRecyclerView.setAdapter(songAdapter);
 
             //Change recycler view orientation

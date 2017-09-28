@@ -24,7 +24,7 @@ class Voice extends Sound {
     }
 
     @Override
-    public void shareButtonEventListener(SongViewHolder holder) {
+    public void mButtonEventListener(SongViewHolder holder) {
 
     }
 }

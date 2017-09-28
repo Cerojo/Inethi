@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Set up Navigation controls
         mTextMessage = (TextView) findViewById(R.id.message);
+        mTextMessage.setText(R.string.profile);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);

@@ -46,7 +46,7 @@ public interface SoundInterface {
 
     void playButtonEventListener(final SongViewHolder holder);
 
-    void shareButtonEventListener(final SongViewHolder holder);
+    void mButtonEventListener(final SongViewHolder holder);
 
     String getDuration(int duration);
 

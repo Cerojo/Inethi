@@ -15,6 +15,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.locit.cecilhlungwana.inethi.USER;
+import com.locit.cecilhlungwana.inethi.UserInfoDBHandler;
 import com.locit.cecilhlungwana.inethi.R;
 
 /**
@@ -44,7 +46,6 @@ public class LoginFragment extends Fragment {
         loginButton = (Button)view.findViewById(R.id.logingbutton);
         registerButton = (Button)view.findViewById(R.id.registerbutton);
         rememberMeCheckBox = (CheckBox) view.findViewById(R.id.rememberMecheckBox);
-
         usernameInput = (EditText)view.findViewById(R.id.usernameeditText);
         passwordInput = (EditText)view.findViewById(R.id.passwordeditText);
 
@@ -55,11 +56,35 @@ public class LoginFragment extends Fragment {
         loginClickEvent();
 
         //Handle register button click event
+        registerClickEvent();
+        //newUser ();
+        //lookupUser ();
+        return view;
+    }
+
+    public void newUser(){//View view) {
+        UserInfoDBHandler dbHandler = new UserInfoDBHandler(getContext(), null, null, 1);
+        USER user = new USER(usernameInput.getText().toString(), passwordInput.getText().toString());
+        dbHandler.addUser(user);
+    }
+
+    public boolean lookupUser(){//View view) {
+        UserInfoDBHandler dbHandler = new UserInfoDBHandler(getContext(), null, null, 1);
+        USER USER = dbHandler.findUser(usernameInput.getText().toString());
+        if(USER != null){
+            if(USER.getUserName().equals(usernameInput.getText().toString()) && USER.getPassword().equals(passwordInput.getText().toString())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void registerClickEvent() {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //User not in database
-                if(username.equals(usernameInput.getText().toString()) && password.equals(passwordInput.getText().toString())){
+                if((username.equals(usernameInput.getText().toString()) && password.equals(passwordInput.getText().toString())) || lookupUser()){
                     Toast.makeText(getContext(), "User already exists", Toast.LENGTH_LONG).show();
                 }
 
@@ -71,12 +96,11 @@ public class LoginFragment extends Fragment {
                 //Authorised
                 else {
                     Toast.makeText(getContext(), "Registered", Toast.LENGTH_LONG).show();
+                    newUser();
                     changeFragment(new ProfileFragment());
                 }
             }
         });
-
-        return view;
     }
 
     private void skipClickEvent() {
@@ -94,8 +118,13 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Authorised
-                if(username.equals(usernameInput.getText().toString()) && password.equals(passwordInput.getText().toString())){
+                if(username.equals(usernameInput.getText().toString()) && password.equals(passwordInput.getText().toString()) || lookupUser()){
                     changeFragment(new ProfileFragment());
+                }
+
+                //Empty fields
+                else if(usernameInput.getText().toString().equals("") || passwordInput.getText().toString().equals("")){
+                    Toast.makeText(getContext(), "Please fill in the entire fields", Toast.LENGTH_LONG).show();
                 }
 
                 //User does not exist
