@@ -49,8 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Inethi" />
+                android:inputType="textPersonName" />
 
             <TextView
                 android:id="@+id/biotextView"
@@ -63,8 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textMultiLine"
-                android:text="Inethi is a community-based wireless project based in Masiphumelele and Ocean View. As part of this project we will develop and offer localized &quot;cloudlet&quot; apps for and with the community, enabling easier sharing and authoring of locally created content. For the music authoring platform, you will develop a server (in the form of a virtual machine or docker) that will be accessible via web interface and an android app. The server should host and allow publishing and downloading of local artists' music, as well as download of creative commons-licensed beats that can be used for authoring hip hop music. The client will allow upload of music as well as composition of new music using the downloadable resources and other tools." />
+                android:inputType="textMultiLine" />
 
             <Button
                 android:id="@+id/savebutton"

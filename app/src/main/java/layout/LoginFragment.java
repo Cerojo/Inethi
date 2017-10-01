@@ -3,6 +3,7 @@ package layout;
 This login fragment class handles the login in view
  */
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,14 +24,18 @@ import com.locit.cecilhlungwana.inethi.R;
  * A simple {@link Fragment} subclass.
  */
 public class LoginFragment extends Fragment {
-    private final String username = "Admin";
+    private String username = "Admin";
     private EditText usernameInput;
     private EditText passwordInput;
-    private final String password = "Admin@music";
+    private String password = "Admin@music";
     private Button skipButton;
     private Button loginButton;
     private Button registerButton;
     private CheckBox rememberMeCheckBox;
+    private final String mUsername = "username";
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
+    private Boolean saveLogin;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -57,18 +62,26 @@ public class LoginFragment extends Fragment {
 
         //Handle register button click event
         registerClickEvent();
-        //newUser ();
-        //lookupUser ();
+
+        loginPreferences = getActivity().getSharedPreferences("loginPrefs", getActivity().MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+
+        saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        if (saveLogin) {
+            usernameInput.setText(loginPreferences.getString("username", ""));
+            passwordInput.setText(loginPreferences.getString("password", ""));
+            rememberMeCheckBox.setChecked(true);
+        }
         return view;
     }
 
-    public void newUser(){//View view) {
+    private void newUser(){//View view) {
         UserInfoDBHandler dbHandler = new UserInfoDBHandler(getContext(), null, null, 1);
         USER user = new USER(usernameInput.getText().toString(), passwordInput.getText().toString());
         dbHandler.addUser(user);
     }
 
-    public boolean lookupUser(){//View view) {
+    private boolean lookupUser(){//View view) {
         UserInfoDBHandler dbHandler = new UserInfoDBHandler(getContext(), null, null, 1);
         USER USER = dbHandler.findUser(usernameInput.getText().toString());
         if(USER != null){
@@ -97,7 +110,13 @@ public class LoginFragment extends Fragment {
                 else {
                     Toast.makeText(getContext(), "Registered", Toast.LENGTH_LONG).show();
                     newUser();
-                    changeFragment(new ProfileFragment());
+                    Bundle bundle = new Bundle();
+                    bundle.putString(mUsername, usernameInput.getText().toString());
+                    ProfileFragment fragment = new ProfileFragment();
+                    fragment.setArguments(bundle);
+                    changeFragment(fragment);
+
+                    rememberMeMethod();
                 }
             }
         });
@@ -119,7 +138,13 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 //Authorised
                 if(username.equals(usernameInput.getText().toString()) && password.equals(passwordInput.getText().toString()) || lookupUser()){
-                    changeFragment(new ProfileFragment());
+                    Bundle bundle = new Bundle();
+                    bundle.putString(mUsername, usernameInput.getText().toString());
+                    ProfileFragment fragment = new ProfileFragment();
+                    fragment.setArguments(bundle);
+                    changeFragment(fragment);
+
+                    rememberMeMethod();
                 }
 
                 //Empty fields
@@ -133,6 +158,21 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void rememberMeMethod() {
+        username = usernameInput.getText().toString();
+        password = passwordInput.getText().toString();
+
+        if (rememberMeCheckBox.isChecked()) {
+            loginPrefsEditor.putBoolean("saveLogin", true);
+            loginPrefsEditor.putString("username", username);
+            loginPrefsEditor.putString("password", password);
+            loginPrefsEditor.commit();
+        } else {
+            loginPrefsEditor.clear();
+            loginPrefsEditor.commit();
+        }
     }
 
     //Switch to profile class

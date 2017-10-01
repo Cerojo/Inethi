@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by cecilhlungwana on 2017/09/22.
@@ -299,5 +300,25 @@ abstract class Sound implements SoundInterface{
                 }catch(Exception ignored){}
             }
         }
+    }
+
+    public MediaPlayer getSong(int index) {
+        String musicPath = soundList.get(index).get(filePath);
+        return MediaPlayer.create(context, Uri.parse(musicPath));
+    }
+
+    public List<Song> getSongs(){
+        List<Song> songs = new ArrayList<Song>();
+        for(int i = 0; i < soundList.size(); i++){
+            Song song = new Song();
+            song.setSongName(getFileName(i));
+            song.setSong(getSong(i));
+            song.setArtistName(getFileName(i));
+            song.setCover(getCoverArt(i));
+            song.setDuration(getDuration(i));
+            song.setSize(getFileSize(i));
+            songs.add(song);
+        }
+        return songs;
     }
 }

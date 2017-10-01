@@ -56,6 +56,18 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addInfo(USER USER) {
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, USER.getName());
+        values.put(COLUMN_BIO, USER.getBio());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.update(TABLE_USER, values, COLUMN_ID+" = '" + USER.getID() + "'", null);
+        db.close();
+    }
+
     public USER findUser(String username) {
         String query = "Select * FROM " + TABLE_USER + " WHERE " + COLUMN_USERNAME + " =  \"" + username + "\"";
 
@@ -70,6 +82,8 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
             USER.setID(Integer.parseInt(cursor.getString(0)));
             USER.setUserName(cursor.getString(1));
             USER.setPassword(cursor.getString(2));
+            USER.setName(cursor.getString(3));
+            USER.setBio(cursor.getString(4));
             cursor.close();
         } else {
             USER = null;
@@ -78,11 +92,11 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
         return USER;
     }
 
-    public boolean deleteUser(String productname) {
+    public boolean deleteUser(String username) {
 
         boolean result = false;
 
-        String query = "Select * FROM " + TABLE_USER + " WHERE " + COLUMN_USERNAME + " =  \"" + productname + "\"";
+        String query = "Select * FROM " + TABLE_USER + " WHERE " + COLUMN_USERNAME + " =  \"" + username + "\"";
 
         SQLiteDatabase db = this.getWritableDatabase();
 

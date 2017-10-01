@@ -10,8 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.SearchView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import layout.BeatFragment;
 
@@ -19,7 +23,7 @@ import layout.BeatFragment;
  * Created by cecilhlungwana on 2017/09/03.
  */
 
-public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
+public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {//implements Filterable {
     private final String shareString = "Search song to Share";
     private final LayoutInflater inflater;
     private SongViewHolder songViewHolder;
@@ -30,6 +34,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
     private Voice voice;
     private View parentView;
     private FragmentActivity activity;
+    private List<Song> songs;
+    //private CustomFilter mFilter;
+
+    //private CustomFilter mFilter;
 
     //Constructor
     public SongAdapter(Context context, int classID, View view, View parentView){
@@ -39,12 +47,33 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
         beats = new Beats(context);
         voice = new Voice(context);
 
-        this.parentView = parentView;
+        /*switch (classID) {
+            case 1: //Download
+                break;
+            case 2: //Upload
+                break;
+            case 3: //Music
+                songs = music.getSongs();
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+        }*/
 
+        this.parentView = parentView;
         musicSearchView = (SearchView) view.findViewById(R.id.musicsearchView); //Set up the search bar
         musicSearchView.setIconified(false);
         musicSearchView.setQueryHint(shareString);
         musicSearchView.clearFocus();
+
+        //mFilter = new CustomFilter(SongAdapter.this);
     }
 
     @Override
@@ -59,7 +88,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
      */
     @Override
     public void onBindViewHolder(final SongViewHolder holder, final int position) {
-        /*Song song = songs.get(position); //Get information of song at current position*/
+        Song song = songs.get(position); //Get information of song at current position*/
         Button button;
         switch (classID) {
             case 1: //Download
@@ -69,6 +98,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
             case 3: //Music
                 holder.getDusImageButton().setImageResource(R.drawable.share);
                 soundSetup(holder, music, position);
+                /*holder.getSongDuration().setText(song.getDuration());
+                holder.getSongSize().setText(song.getSize());
+                holder.getSongCover().setImageBitmap(song.getCover());
+                holder.getSongName().setText(song.getSongName());*/
                 break;
             case 4:
                 button = (Button)parentView.findViewById(R.id.button1);
@@ -156,4 +189,41 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder>{
     private FragmentActivity getActivity(){
         return activity;
     }
+
+    /*@Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    public class CustomFilter extends Filter {
+        private SongAdapter mAdapter;
+        private CustomFilter(SongAdapter mAdapter) {
+            super();
+            this.mAdapter = mAdapter;
+        }
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
+            if (constraint.length() == 0) {
+                filteredList.addAll(dictionaryWords);
+            } else {
+                final String filterPattern = constraint.toString().toLowerCase().trim();
+                for (final QuizObject mWords : dictionaryWords) {
+                    if (mWords.getWord().toLowerCase().startsWith(filterPattern)) {
+                        filteredList.add(mWords);
+                    }
+                }
+            }
+            System.out.println("Count Number " + filteredList.size());
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            System.out.println("Count Number 2 " + ((List<QuizObject>) results.values).size());
+            this.mAdapter.notifyDataSetChanged();
+        }
+    }*/
 }

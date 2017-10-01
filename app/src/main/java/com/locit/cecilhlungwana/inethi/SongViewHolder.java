@@ -23,7 +23,6 @@ class SongViewHolder extends RecyclerView.ViewHolder{
     private ImageButton dusImageButton;
     private ImageButton play_pause_ImageButton;
     private ImageButton uploadImageButton;
-    private MediaPlayer mediaPlayer;
 
     //Load everyting in the constructor
     public SongViewHolder(View itemView) {

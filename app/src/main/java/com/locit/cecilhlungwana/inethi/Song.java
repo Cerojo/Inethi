@@ -4,23 +4,21 @@ Song Abstract Class
 This class is used to create an object of a song
  */
 
+import android.graphics.Bitmap;
+import android.media.MediaPlayer;
+import android.widget.ImageView;
+
 /**
  * Created by cecilhlungwana on 2017/09/03.
  */
 
 public class Song {
-    private int iconId; //Cover image id
     private String songName; //Song name
     private String artistName; //Artist name
-    private int songId;
-
-    public int getIconId() {
-        return iconId;
-    }
-
-    public void setIconId(int iconId) {
-        this.iconId = iconId;
-    }
+    private String size;
+    private String duration;
+    private Bitmap cover;
+    private MediaPlayer song;
 
     public String getSongName() {
         return songName;
@@ -38,11 +36,35 @@ public class Song {
         this.artistName = artistName;
     }
 
-    public int getSongId() {
-        return songId;
+    public String getSize() {
+        return size;
     }
 
-    public void setSongId(int songId) {
-        this.songId = songId;
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public Bitmap getCover() {
+        return cover;
+    }
+
+    public void setCover(Bitmap cover) {
+        this.cover = cover;
+    }
+
+    public MediaPlayer getSong() {
+        return song;
+    }
+
+    public void setSong(MediaPlayer song) {
+        this.song = song;
     }
 }

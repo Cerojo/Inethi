@@ -28,6 +28,9 @@ public class MusicFragment extends Fragment{
     private RecyclerView musicRecyclerView;
     private SongAdapter songAdapter;
 
+    private List<Song> songList;
+    private List<Song> filteredList;
+
     public MusicFragment(){}
 
     @Override
