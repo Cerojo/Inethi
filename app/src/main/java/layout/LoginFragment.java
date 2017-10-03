@@ -47,15 +47,11 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        skipButton = (Button)view.findViewById(R.id.skipbutton);
         loginButton = (Button)view.findViewById(R.id.logingbutton);
         registerButton = (Button)view.findViewById(R.id.registerbutton);
         rememberMeCheckBox = (CheckBox) view.findViewById(R.id.rememberMecheckBox);
         usernameInput = (EditText)view.findViewById(R.id.usernameeditText);
         passwordInput = (EditText)view.findViewById(R.id.passwordeditText);
-
-        //Skip button click event
-        skipClickEvent();
 
         //Login button click event
         loginClickEvent();
@@ -118,16 +114,6 @@ public class LoginFragment extends Fragment {
 
                     rememberMeMethod();
                 }
-            }
-        });
-    }
-
-    private void skipClickEvent() {
-        skipButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = new ProfileFragment();
-                changeFragment(fragment);
             }
         });
     }

@@ -150,7 +150,7 @@ public class MusicFragment extends Fragment {
             holder.mPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if((song!=null) && (song.isPlaying()) && (holder.getAdapterPosition() != previousSong)){//(getPreviousB()!=null && song!=null){
+                    if((song!=null) && (song.isPlaying()) && (holder.getAdapterPosition() != previousSong)){
                         song.pause();
                         getPreviousB().setImageResource(R.drawable.play);
                         setPreviousB(null);

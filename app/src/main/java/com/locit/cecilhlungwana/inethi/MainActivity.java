@@ -49,24 +49,20 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);  //Start the Activity
                     return true;
                 case R.id.navigation_profile:
-                    mTextMessage.setText(R.string.profile);           //Load The Header Title
-                    FRAGMENT_ID = 0;                          //Fragment ID for knowing which fragment to change to.
-                    changeFragment(FRAGMENT_ID);
+                    mTextMessage.setText(R.string.profile);
+                    changeFragment(new LoginFragment());
                     return true;
                 case R.id.navigation_download:
                     mTextMessage.setText(R.string.download);
-                    FRAGMENT_ID = 1;
-                    changeFragment(FRAGMENT_ID);
+                    changeFragment(new DownloadFragment());
                     return true;
                 case R.id.navigation_upload:
                     mTextMessage.setText(R.string.upload);
-                    FRAGMENT_ID = 2;
-                    changeFragment(FRAGMENT_ID);
+                    changeFragment(new UploadFragment());
                     return true;
                 case R.id.navigation_music:
                     mTextMessage.setText(R.string.music);
-                    FRAGMENT_ID = 3;
-                    changeFragment(FRAGMENT_ID);
+                    changeFragment(new MusicFragment());
                     return true;
             }
             return false;
@@ -78,27 +74,12 @@ public class MainActivity extends AppCompatActivity {
     Method for handling to process of switching fragments
     Parameters: Fragment ID, SearchBar hint text, List of songs to be displayed.
      */
-    private void changeFragment(final int id){
+    private void changeFragment(Fragment fragment){
         FragmentManager fragmentManager;
         FragmentTransaction transaction;
-
-        //This only get changed when the new fragment is the Login fragment.
-        if(id == 0){
-            Fragment fragment = new LoginFragment(); //Load new fragment
-            fragmentManager = getSupportFragmentManager();
-            transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content, fragment); //Switch fragments
-            transaction.commit();
-            return; //Exit
-        }
-
-        //All the other fragments have the same features
-        MusicFragment musicFragment = new MusicFragment(); //Load new fragment
-        //musicFragment.setMusicFragment(id); //Set ID
-
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content, musicFragment); //Switch fragments
+        transaction.replace(R.id.content, fragment); //Switch fragments
         transaction.addToBackStack(null);
         transaction.commit();
     }
