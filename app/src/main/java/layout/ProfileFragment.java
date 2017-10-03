@@ -5,6 +5,7 @@ This profile fragment class handles the profile screen view
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.locit.cecilhlungwana.inethi.DbBitmapUtility;
 import com.locit.cecilhlungwana.inethi.R;
 import com.locit.cecilhlungwana.inethi.USER;
 import com.locit.cecilhlungwana.inethi.UserInfoDBHandler;
@@ -86,6 +88,7 @@ public class ProfileFragment extends Fragment {
         if(name.getText() != null || bio.getText() != null) {
             user.setName(name.getText().toString());
             user.setBio(bio.getText().toString());
+            user.setImage(((BitmapDrawable)userProfile.getDrawable()).getBitmap());
             dbHandler.addInfo(user);
             Toast.makeText(getContext(),"Saved",Toast.LENGTH_LONG).show();
         }
@@ -118,6 +121,10 @@ public class ProfileFragment extends Fragment {
             if(USER.getBio() != null){
                 bio.setText(USER.getBio());
             }
+            try {
+                userProfile.setImageBitmap(DbBitmapUtility.getImage(USER.getImage()));
+            }
+            catch (Exception ignored){}
         }
     }
 

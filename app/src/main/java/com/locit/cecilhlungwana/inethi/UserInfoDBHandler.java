@@ -16,11 +16,13 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "userDB.db";
     private static final String TABLE_USER = "user";
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_USERNAME = "username";
-    public static final String COLUMN_PASSWORD = "password";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_BIO = "bio";
+    private static final String COLUMN_ID = "_id";
+    private static final String COLUMN_USERNAME = "username";
+    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_BIO = "bio";
+    private static final String COLUMN_IMAGE = "image";
+
 
     public UserInfoDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -28,14 +30,15 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " +
+        String CREATE_USER_TABLE = "CREATE TABLE " +
                 TABLE_USER + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_USERNAME + " TEXT,"
                 + COLUMN_PASSWORD + " TEXT,"
                 + COLUMN_NAME + " TEXT,"
-                + COLUMN_BIO + ")";
-        db.execSQL(CREATE_PRODUCTS_TABLE);
+                + COLUMN_BIO + " TEXT,"
+                + COLUMN_IMAGE + " BLOB"+")";
+        db.execSQL(CREATE_USER_TABLE);
     }
 
     @Override
@@ -61,6 +64,7 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, USER.getName());
         values.put(COLUMN_BIO, USER.getBio());
+        values.put(COLUMN_IMAGE, USER.getImage());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -84,6 +88,10 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
             USER.setPassword(cursor.getString(2));
             USER.setName(cursor.getString(3));
             USER.setBio(cursor.getString(4));
+            try {
+                USER.setImage(DbBitmapUtility.getImage(cursor.getBlob(5)));
+            }
+            catch (Exception ignored){}
             cursor.close();
         } else {
             USER = null;

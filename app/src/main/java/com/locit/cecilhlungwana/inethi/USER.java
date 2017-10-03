@@ -1,5 +1,7 @@
 package com.locit.cecilhlungwana.inethi;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by cecilhlungwana on 2017/09/27.
  */
@@ -11,6 +13,7 @@ public class USER {
     private String _password;
     private String name;
     private String bio;
+    private Bitmap image;
 
     public USER() {
 
@@ -65,5 +68,13 @@ public class USER {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public byte[] getImage() {
+        return DbBitmapUtility.getBytes(image);
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 }
