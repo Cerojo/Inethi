@@ -88,7 +88,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {//impleme
      */
     @Override
     public void onBindViewHolder(final SongViewHolder holder, final int position) {
-        Song song = songs.get(position); //Get information of song at current position*/
+        //Song song = songs.get(position); //Get information of song at current position*/
         Button button;
         switch (classID) {
             case 1: //Download
@@ -189,41 +189,4 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {//impleme
     private FragmentActivity getActivity(){
         return activity;
     }
-
-    /*@Override
-    public Filter getFilter() {
-        return mFilter;
-    }
-
-    public class CustomFilter extends Filter {
-        private SongAdapter mAdapter;
-        private CustomFilter(SongAdapter mAdapter) {
-            super();
-            this.mAdapter = mAdapter;
-        }
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            filteredList.clear();
-            final FilterResults results = new FilterResults();
-            if (constraint.length() == 0) {
-                filteredList.addAll(dictionaryWords);
-            } else {
-                final String filterPattern = constraint.toString().toLowerCase().trim();
-                for (final QuizObject mWords : dictionaryWords) {
-                    if (mWords.getWord().toLowerCase().startsWith(filterPattern)) {
-                        filteredList.add(mWords);
-                    }
-                }
-            }
-            System.out.println("Count Number " + filteredList.size());
-            results.values = filteredList;
-            results.count = filteredList.size();
-            return results;
-        }
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            System.out.println("Count Number 2 " + ((List<QuizObject>) results.values).size());
-            this.mAdapter.notifyDataSetChanged();
-        }
-    }*/
 }

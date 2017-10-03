@@ -28,7 +28,7 @@
         </activity>
         <activity
             android:name=".BeatActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

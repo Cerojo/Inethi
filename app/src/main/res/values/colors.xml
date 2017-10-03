@@ -9,4 +9,5 @@
     <color name="primaryColorDar">#7a1ea1</color>
     <color name="primaryColorDark">#691a99</color>
     <color name="primaryColorAccent">#68efad</color>
+    <color name="divider">#727272</color>
 </resources>

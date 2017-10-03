@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         //All the other fragments have the same features
         MusicFragment musicFragment = new MusicFragment(); //Load new fragment
-        musicFragment.setMusicFragment(id); //Set ID
+        //musicFragment.setMusicFragment(id); //Set ID
 
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
