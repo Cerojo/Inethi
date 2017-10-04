@@ -25,7 +25,6 @@ import layout.MusicFragment;
 
 public class MainActivity extends AppCompatActivity {
     //Private variable for class
-    private int FRAGMENT_ID;
     private TextView mTextMessage;
     private File mainDirectory = Environment.getExternalStorageDirectory();
 

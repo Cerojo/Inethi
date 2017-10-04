@@ -5,12 +5,18 @@ The beats fragment class handles the view
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.audiofx.Visualizer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -18,32 +24,45 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.locit.cecilhlungwana.inethi.R;
+import com.locit.cecilhlungwana.inethi.Song;
 import com.locit.cecilhlungwana.inethi.SongAdapter;
 import com.locit.cecilhlungwana.inethi.VerticalSeekBar;
 import com.locit.cecilhlungwana.inethi.VisualizerView;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class BeatFragment extends Fragment {
     private MediaPlayer song;
+    private MediaPlayer music;
     private int seekbarInt = 0;
     private int[] sound1Inputs = {0,0,0,0};
     private int[] sound2Inputs = {0,0,0,0};
@@ -82,6 +101,7 @@ public class BeatFragment extends Fragment {
     private Boolean stopBoolean = true;
     private Boolean recordBoolean = true;
     private Boolean micBoolean = true;
+    private Boolean musicBoolean = true;
 
     private Boolean volumeState = true;
 
@@ -128,6 +148,32 @@ public class BeatFragment extends Fragment {
     private final static int MAX_VOLUME = 100;
 
     private int bpm = 522;
+
+    //******************************************
+    private final String fileName = "file_name";
+    private final String filePath = "file_path";
+    private ArrayList<HashMap<String, String>> soundList;
+    private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Inethi/" + "Download/";
+    private final String fileFormat = ".mp3";
+    private List<Song> songs;
+    private List<Song> filteredSongs;
+    private int counter = 0;
+    private static boolean state = false;
+    private EditText searchBox;
+    private SimpleItemRecyclerViewAdapter mAdapter;
+    private boolean threadRunningUP = false;
+    private Runnable runnableUP;
+    private Thread myThreadUP;
+    private Boolean instrument;
+    private Button sButton;
+    private int buttonColumn;
+
+    private int[] hiHats = {R.raw.hh1, R.raw.hh2, R.raw.hh3, R.raw.hh4, R.raw.hh5, R.raw.hh6, R.raw.hh7, R.raw.hh8, R.raw.hh9, R.raw.hh10};
+    private int[] kicks = {R.raw.k1, R.raw.k2, R.raw.k3, R.raw.k4, R.raw.k5, R.raw.k6, R.raw.k7, R.raw.k8, R.raw.k9, R.raw.k10};
+    private int[] percussions = {R.raw.p1, R.raw.p2, R.raw.p3, R.raw.p4, R.raw.p5, R.raw.p6, R.raw.p7, R.raw.p8, R.raw.p9, R.raw.p10};
+    private int[] snares = {R.raw.s1, R.raw.s2, R.raw.s3, R.raw.s4, R.raw.s5,R.raw.s6, R.raw.s7, R.raw.s8, R.raw.s9, R.raw.s10};
+    private int[] toms = {R.raw.t1, R.raw.t2, R.raw.t3, R.raw.t4, R.raw.t5, R.raw.t6, R.raw.t7, R.raw.t8, R.raw.t9, R.raw.t10};
+    //******************************************
 
     public BeatFragment() {}
 
@@ -214,19 +260,33 @@ public class BeatFragment extends Fragment {
         });
     }
 
-    private void musicButtonEventListener(View view) {
+    private void musicButtonEventListener(final View view) {
         musicButton = (ImageButton)view.findViewById(R.id.musicimageButton);
         musicButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showPopup(4);
+                showPopup(false);
+                Button b = (Button)view.findViewById(R.id.music_b);
+                setButton(b);
                 return false;
             }
         });
         musicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Bye World", Toast.LENGTH_LONG).show();
+                if(musicBoolean){
+                    musicButton.setColorFilter(Color.RED);
+                    if(music!=null){
+                        music.start();
+                    }
+                }
+                else{
+                    musicButton.setColorFilter(color);
+                    if(music!=null){
+                        music.pause();
+                    }
+                }
+                musicBoolean = !musicBoolean;
             }
         });
     }
@@ -235,7 +295,9 @@ public class BeatFragment extends Fragment {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showPopup(4);
+                buttonColumn = 0;
+                setButton(button);
+                showPopup(true);
                 return false;
             }
         });
@@ -259,7 +321,9 @@ public class BeatFragment extends Fragment {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showPopup(5);
+                buttonColumn = 1;
+                setButton(button);
+                showPopup(true);
                 return false;
             }
         });
@@ -282,7 +346,9 @@ public class BeatFragment extends Fragment {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showPopup(6);
+                buttonColumn = 2;
+                setButton(button);
+                showPopup(true);
                 return false;
             }
         });
@@ -306,7 +372,9 @@ public class BeatFragment extends Fragment {
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showPopup(7);
+                buttonColumn = 3;
+                setButton(button);
+                showPopup(true);
                 return false;
             }
         });
@@ -324,6 +392,14 @@ public class BeatFragment extends Fragment {
                 sound4Boolean = !sound4Boolean;
             }
         });
+    }
+
+    private void setButton(Button button){
+        sButton = button;
+    }
+
+    private Button getButton(){
+        return sButton;
     }
 
     private void VolumeButtonMethod() {
@@ -383,42 +459,90 @@ public class BeatFragment extends Fragment {
         }
     }
 
-    private void showPopup(int select) {
+    private void l1Beats(MediaPlayer mPlayer) {
+        for (int i = 0; i < sound1Toggle.length; i++) {
+            k = (ToggleButton) view.findViewById(sound1Toggle[i]); //Find toggle button ID
+            sound1 = mPlayer;
+            setBeat(k, sound1, sound1Inputs, i); //Load beat
+        }
+    }
+
+    private void l2Beats(MediaPlayer mPlayer) {
+        for (int i = 0; i < sound2Toggle.length; i++) {
+            c = (ToggleButton) view.findViewById(sound2Toggle[i]); //Find toggle button ID
+            sound2 = mPlayer;
+            setBeat(c, sound2, sound2Inputs, i); //Load beat
+        }
+    }
+
+    private void l3Beats(MediaPlayer mPlayer) {
+        for (int i = 0; i < sound3Toggle.length; i++) {
+            h = (ToggleButton) view.findViewById(sound3Toggle[i]); //Find toggle button ID
+            sound3 = mPlayer;
+            setBeat(h, sound3, sound3Inputs, i); //Load beat
+        }
+    }
+
+    private void l4Beats(MediaPlayer mPlayer) {
+        for (int i = 0; i < sound4Toggle.length; i++) {
+            s = (ToggleButton) view.findViewById(sound4Toggle[i]); //Find toggle button ID
+            sound4 = mPlayer;
+            setBeat(s, sound4, sound4Inputs, i); //Load beat
+        }
+    }
+
+    private void showPopup(boolean instrumentB) {
         try {
             LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final View layout = inflater.inflate(R.layout.list_beats, (ViewGroup) getActivity().findViewById(R.id.listbeats));
+            final View layout = inflater.inflate(R.layout.fragment_music_display, (ViewGroup) getActivity().findViewById(R.id.listbeats));
             pw = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
-            Close = (Button) layout.findViewById(R.id.close_popup);
-            Close.setOnClickListener(cancel_button);
 
-            //----------------------------------------------------------
-            //Load the recycler view
-            defaultRecyclerView = (RecyclerView) layout.findViewById(R.id.defaultRecyclerView);
-            songAdapter = new SongAdapter(getContext(), select, layout, view);
-            songAdapter.setActivity(getActivity());
-            defaultRecyclerView.setAdapter(songAdapter);
+            if(instrumentB) {
+                songs = getSongsBeat();
+                filteredSongs = new ArrayList<Song>();
+                filteredSongs.addAll(songs);
+            }
+            else{
+                soundList = getPlayList(path);
+                songs = getSongs();
+                filteredSongs = new ArrayList<Song>();
+                filteredSongs.addAll(songs);
+            }
+            instrument = instrumentB;
 
-            //Change recycler view orientation
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-            defaultRecyclerView.setLayoutManager(layoutManager);
+            searchBox = (EditText) layout.findViewById(R.id.search_box);
+            RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.item_list);
+            mAdapter = new SimpleItemRecyclerViewAdapter(filteredSongs);
+            recyclerView.setAdapter(mAdapter);
+
+            searchBox.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    mAdapter.getFilter().filter(s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private View.OnClickListener cancel_button = new View.OnClickListener() {
-        public void onClick(View v) {
-            pw.dismiss();
-        }
-    };
-
-    private void micMethod(View view) {
+    private void micMethod(final View view) {
         micButton = (ImageButton)view.findViewById(R.id.micimageButton);
         micButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showPopup(8);
+                showPopup(false);
+                Button b = (Button)view.findViewById(R.id.mic_b);
+                setButton(b);
                 return false;
             }
         });
@@ -631,4 +755,554 @@ public class BeatFragment extends Fragment {
         mRecorder.release();
         mRecorder = null;
     }
+
+    //********************************************
+    class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> implements Filterable {
+        private List<Song> mValues;
+        private CustomFilter mFilter;
+        private Boolean playing = true;
+        private int previousSong = -1;
+        private ImageButton previousB;
+        private ViewHolder vHolder;
+
+        SimpleItemRecyclerViewAdapter(List<Song> items) {
+            mValues = items;
+            mFilter = new CustomFilter(SimpleItemRecyclerViewAdapter.this);
+            runnableUP = new CountDownRunnerUP();
+            myThreadUP = new Thread(runnableUP);
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_view_layout, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+            holder.mItem = mValues.get(position);
+            holder.mName.setText(String.valueOf(mValues.get(position).getArtistName()));
+            holder.mDuration.setText(String.valueOf(mValues.get(position).getDuration()));
+            holder.mSize.setText(String.valueOf(mValues.get(position).getSize()));
+            holder.mShare.setImageResource(R.drawable.select);
+            if(mValues.get(position).getCover()!=null){holder.mImage.setImageBitmap(mValues.get(position).getCover());}
+            else{holder.mImage.setImageResource(R.drawable.musicicon);}
+
+            holder.mShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(),mValues.get(position).getArtistName()+" selected",Toast.LENGTH_LONG).show();
+                    if(instrument) {
+                        switch (buttonColumn) {
+                            case 0:
+                                l1Beats(holder.mItem.getSong());
+                                break;
+                            case 1:
+                                l2Beats(holder.mItem.getSong());
+                                break;
+                            case 2:
+                                l3Beats(holder.mItem.getSong());
+                                break;
+                            case 3:
+                                l4Beats(holder.mItem.getSong());
+                                break;
+                        }
+                    }
+                    else{
+                        music = holder.mItem.getSong();
+                    }
+                    getButton().setText(mValues.get(position).getArtistName());
+                    pw.dismiss();
+                }
+            });
+
+            holder.mPlay.setImageResource(R.drawable.play);
+            final boolean check = song!=null && song.isPlaying() && !song.equals(holder.mItem.getSong());
+            if(check){
+                holder.mPlay.setImageResource(R.drawable.play);
+            }
+            if(previousSong == position){
+                holder.mPlay.setImageResource(R.drawable.pause);
+            }
+
+            holder.mPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if((song!=null) && (song.isPlaying()) && (holder.getAdapterPosition() != previousSong)){
+                        song.pause();
+                        getPreviousB().setImageResource(R.drawable.play);
+                        setPreviousB(null);
+                        vHolder.mDuration.setText(getDuration(previousSong));
+                        playing = !playing;
+                        if(myThreadUP!=null){
+                            threadRunningUP = false;
+                        }
+                    }
+
+                    if(playing){
+                        holder.mPlay.setImageResource(R.drawable.pause);
+                        song = holder.mItem.getSong();
+                        setPreviousB(holder.mPlay);
+                        previousSong = position;
+                        song.start();
+                        vHolder = holder;
+                        counter = 0;
+                        if(!state) {
+                            myThreadUP.start();
+                            state = true;
+                        }
+                        threadRunningUP = true;
+                    }
+                    else{
+                        holder.mPlay.setImageResource(R.drawable.play);
+                        song.pause();
+                        if(myThreadUP!=null){
+                            threadRunningUP = false;
+                        }
+                    }
+                    playing = !playing;
+                }
+            });
+        }
+
+        private void setPreviousB(ImageButton button){
+            previousB = button;
+        }
+        private ImageButton getPreviousB(){
+            return previousB;
+        }
+
+        @Override
+        public int getItemCount() {
+            return mValues.size();
+        }
+
+        @Override
+        public Filter getFilter() {
+            return mFilter;
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final View mView;
+            final TextView mName;
+            final TextView mDuration;
+            final TextView mSize;
+            final ImageView mImage;
+            final ImageButton mPlay;
+            final ImageButton mShare;
+            Song mItem;
+
+            ViewHolder(View view) {
+                super(view);
+                mView = view;
+                mName = (TextView) view.findViewById(R.id.artistNametextView);
+                mDuration = (TextView) view.findViewById(R.id.durationtextView);
+                mSize = (TextView) view.findViewById(R.id.sizetextView);
+                mImage = (ImageView) view.findViewById(R.id.songCoverimageView);
+                mPlay = (ImageButton) view.findViewById(R.id.playimageButton);
+                mShare = (ImageButton) view.findViewById(R.id.downloadimageButton);
+            }
+
+            @Override
+            public String toString() {
+                return super.toString() + " '" + mName.getText() + "'";
+            }
+        }
+
+        class CustomFilter extends Filter {
+            private SimpleItemRecyclerViewAdapter mAdapter;
+
+            private CustomFilter(SimpleItemRecyclerViewAdapter mAdapter) {
+                super();
+                this.mAdapter = mAdapter;
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                filteredSongs.clear();
+                final FilterResults results = new FilterResults();
+                if (constraint.length() == 0) {
+                    filteredSongs.addAll(songs);
+                } else {
+                    final String filterPattern = constraint.toString().toLowerCase().trim();
+                    for (final Song mSong : songs) {
+                        if (mSong.getSongName().toLowerCase().contains(filterPattern) || mSong.getArtistName().toLowerCase().contains(filterPattern)) {
+                            filteredSongs.add(mSong);
+                        }
+                    }
+                }
+                System.out.println("Count Number " + filteredSongs.size());
+                results.values = filteredSongs;
+                results.count = filteredSongs.size();
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                System.out.println("Count Number 2 " + ((List<Song>) results.values).size());
+                this.mAdapter.notifyDataSetChanged();
+            }
+        }
+
+        private void doWorkUP() {
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    String d;
+                    int min_to_sec = song.getDuration()/1000 - counter;
+                    if(min_to_sec >= 0) {
+                        int m = min_to_sec / 60;
+                        int s = min_to_sec - m * 60;
+                        if (s < 10) {
+                            d = m + ":0" + s;
+                        } else {
+                            d = m + ":" + s;
+                        }
+
+                        vHolder.mDuration.setText(d);
+                        counter++;
+                    }
+                    else{
+                        threadRunningUP = false;
+                        counter = 0;
+                        vHolder.mPlay.setImageResource(R.drawable.play);
+                        if(instrument) {
+                            vHolder.mDuration.setText(getDurationBeat(previousSong));
+                        }else{
+                            vHolder.mDuration.setText(getDuration(previousSong));
+                        }
+                    }
+                }
+            });
+        }
+
+        class CountDownRunnerUP implements Runnable{
+            public void run() {
+                while(threadRunningUP){
+                    try {
+                        doWorkUP();
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }catch(Exception ignored){}
+                }
+            }
+        }
+    }
+
+    public List<Song> getSongsBeat() {
+        List<Song> songs = new ArrayList<Song>();
+        for (int i = 0; i < 50; i++) {
+            Song song = new Song();
+            song.setSongName(getFileNameBeat(i));
+            song.setSong(getSongBeat(i));
+            song.setArtistName(getFileNameBeat(i));
+            song.setCover(null);
+            song.setDuration(getDurationBeat(i));
+            song.setSize("");
+            songs.add(song);
+        }
+        return songs;
+    }
+
+    public List<Song> getSongs() {
+        List<Song> songs = new ArrayList<Song>();
+        for (int i = 0; i < soundList.size(); i++) {
+            Song song = new Song();
+            song.setSongName(getFileName(i));
+            song.setSong(getSong(i));
+            song.setArtistName(getFileName(i));
+            song.setCover(getCoverArt(i));
+            song.setDuration(getDuration(i));
+            song.setSize(getFileSize(i));
+            songs.add(song);
+        }
+        return songs;
+    }
+
+    public ArrayList<HashMap<String, String>> getPlayList(String index) {
+        ArrayList<HashMap<String, String>> fileList = new ArrayList<>();
+        try {
+            File rootFolder = new File(index);
+            File[] files = rootFolder.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    if (getPlayList(file.getAbsolutePath()) != null) {
+                        fileList.addAll(getPlayList(file.getAbsolutePath()));
+                    } else {
+                        break;
+                    }
+                } else if (file.getName().endsWith(fileFormat)) {
+                    HashMap<String, String> song = new HashMap<>();
+                    song.put(filePath, file.getAbsolutePath());
+                    song.put(fileName, file.getName());
+                    fileList.add(song);
+                }
+            }
+            return fileList;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String getFileNameBeat(int nameIndex){
+        String fileName = "";
+        switch (nameIndex){
+            case 0:
+                fileName = "Hi-hat 1";
+                break;
+            case 1:
+                fileName = "Hi-hat 2";
+                break;
+            case 2:
+                fileName = "Hi-hat 3";
+                break;
+            case 3:
+                fileName = "Hi-hat 4";
+                break;
+            case 4:
+                fileName = "Hi-hat 5";
+                break;
+            case 5:
+                fileName = "Hi-hat 6";
+                break;
+            case 6:
+                fileName = "Hi-hat 7";
+                break;
+            case 7:
+                fileName = "Hi-hat 8";
+                break;
+            case 8:
+                fileName = "Hi-hat 9";
+                break;
+            case 9:
+                fileName = "Hi-hat 10";
+                break;
+            case 10:
+                fileName = "Kick 1";
+                break;
+            case 11:
+                fileName = "Kick 2";
+                break;
+            case 12:
+                fileName = "Kick 3";
+                break;
+            case 13:
+                fileName = "Kick 4";
+                break;
+            case 14:
+                fileName = "Kick 5";
+                break;
+            case 15:
+                fileName = "Kick 6";
+                break;
+            case 16:
+                fileName = "Kick 7";
+                break;
+            case 17:
+                fileName = "Kick 8";
+                break;
+            case 18:
+                fileName = "Kick 9";
+                break;
+            case 19:
+                fileName = "Kick 10";
+                break;
+            case 20:
+                fileName = "Percussion 1";
+                break;
+            case 21:
+                fileName = "Percussion 2";
+                break;
+            case 22:
+                fileName = "Percussion 3";
+                break;
+            case 23:
+                fileName = "Percussion 4";
+                break;
+            case 24:
+                fileName = "Percussion 5";
+                break;
+            case 25:
+                fileName = "Percussion 6";
+                break;
+            case 26:
+                fileName = "Percussion 7";
+                break;
+            case 27:
+                fileName = "Percussion 8";
+                break;
+            case 28:
+                fileName = "Percussion 9";
+                break;
+            case 29:
+                fileName = "Percussion 10";
+                break;
+            case 30:
+                fileName = "Snare 1";
+                break;
+            case 31:
+                fileName = "Snare 2";
+                break;
+            case 32:
+                fileName = "Snare 3";
+                break;
+            case 33:
+                fileName = "Snare 4";
+                break;
+            case 34:
+                fileName = "Snare 5";
+                break;
+            case 35:
+                fileName = "Snare 6";
+                break;
+            case 36:
+                fileName = "Snare 7";
+                break;
+            case 37:
+                fileName = "Snare 8";
+                break;
+            case 38:
+                fileName = "Snare 9";
+                break;
+            case 39:
+                fileName = "Snare 10";
+                break;
+            case 40:
+                fileName = "Toms 1";
+                break;
+            case 41:
+                fileName = "Toms 2";
+                break;
+            case 42:
+                fileName = "Toms 3";
+                break;
+            case 43:
+                fileName = "Toms 4";
+                break;
+            case 44:
+                fileName = "Toms 5";
+                break;
+            case 45:
+                fileName = "Toms 6";
+                break;
+            case 46:
+                fileName = "Toms 7";
+                break;
+            case 47:
+                fileName = "Toms 8";
+                break;
+            case 48:
+                fileName = "Toms 9";
+                break;
+            case 49:
+                fileName = "Toms 10";
+                break;
+        }
+        return fileName;
+    }
+
+    public String getFileName(int index) {
+        return soundList.get(index).get(fileName).split(fileFormat)[0];
+    }
+
+    private MediaPlayer getSongBeat(int pathIndex){
+        if((song!=null) &&(song.isPlaying())){
+            song.stop();
+        }
+        if(pathIndex >= 0 && pathIndex < 10){
+            song = MediaPlayer.create(getContext(),hiHats[pathIndex]);
+        }
+        if(pathIndex >= 10 && pathIndex < 20){
+            pathIndex -= 10;
+            song = MediaPlayer.create(getContext(),kicks[pathIndex]);
+        }
+        if(pathIndex >= 20 && pathIndex < 30){
+            pathIndex -= 20;
+            song = MediaPlayer.create(getContext(),percussions[pathIndex]);
+        }
+        if(pathIndex >= 30 && pathIndex < 40){
+            pathIndex -= 30;
+            song = MediaPlayer.create(getContext(),snares[pathIndex]);
+        }
+        if(pathIndex >= 40 && pathIndex < 50){
+            pathIndex -= 40;
+            song = MediaPlayer.create(getContext(),toms[pathIndex]);
+        }
+        return song;
+    }
+    public MediaPlayer getSong(int index) {
+        String musicPath = soundList.get(index).get(filePath);
+        return MediaPlayer.create(getContext(), Uri.parse(musicPath));
+    }
+
+    public Bitmap getCoverArt(int index) {
+        android.media.MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        String path = soundList.get(index).get(filePath);
+        Bitmap bitmap = null;
+        if (path != null) {
+            mmr.setDataSource(path);
+            byte[] data = mmr.getEmbeddedPicture();
+
+            if (data != null) {
+                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            }
+        }
+        return bitmap;
+    }
+
+    public String getDurationBeat(int duration) {
+        MediaPlayer mediaPlayer = null;
+        if(duration >= 0 && duration < 10){
+            mediaPlayer = MediaPlayer.create(getContext(),hiHats[duration]);
+        }
+        if(duration >= 10 && duration < 20){
+            duration -= 10;
+            mediaPlayer = MediaPlayer.create(getContext(),kicks[duration]);
+        }
+        if(duration >= 20 && duration < 30){
+            duration -= 20;
+            mediaPlayer = MediaPlayer.create(getContext(),percussions[duration]);
+        }
+        if(duration >= 30 && duration < 40){
+            duration -= 30;
+            mediaPlayer = MediaPlayer.create(getContext(),snares[duration]);
+        }
+        if(duration >= 40 && duration < 50){
+            duration -= 40;
+            mediaPlayer = MediaPlayer.create(getContext(),toms[duration]);
+        }
+
+        int min_to_sec = mediaPlayer.getDuration()/1000;
+        int m = min_to_sec/60;
+        int s = min_to_sec-m*60;
+        if(s<10){
+            return m+":0"+s;
+        }
+        return m+":"+s;
+    }
+
+    public String getDuration(int duration) {
+        String soundPath = soundList.get(duration).get(filePath);
+        MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), Uri.parse(soundPath));
+        int min_to_sec = mediaPlayer.getDuration()/1000;
+        int m = min_to_sec/60;
+        int s = min_to_sec-m*60;
+        if(s<10){
+            return m+":0"+s;
+        }
+        return m+":"+s;
+    }
+
+    public String getFileSize(int index) {
+        File file = new File(soundList.get(index).get(filePath));
+        float fileSize = (float) (file.length() / 1000000.0);
+        return Math.round(fileSize * 100.0) / 100.0 + "MB";
+    }
+
+    public String getFileSizeBeat(int index) {
+        File file = new File(soundList.get(index).get(filePath));
+        float fileSize = (float) (file.length() / 1000000.0);
+        return Math.round(fileSize * 100.0) / 100.0 + "MB";
+    }
+    //********************************************
 }

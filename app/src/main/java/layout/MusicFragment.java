@@ -96,7 +96,7 @@ public class MusicFragment extends Fragment {
         return view;
     }
 
-    public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> implements Filterable {
+    class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> implements Filterable {
         private List<Song> mValues;
         private CustomFilter mFilter;
         private Boolean playing = true;
@@ -104,7 +104,7 @@ public class MusicFragment extends Fragment {
         private ImageButton previousB;
         private ViewHolder vHolder;
 
-        public SimpleItemRecyclerViewAdapter(List<Song> items) {
+        SimpleItemRecyclerViewAdapter(List<Song> items) {
             mValues = items;
             mFilter = new CustomFilter(SimpleItemRecyclerViewAdapter.this);
             runnable = new CountDownRunner();
@@ -154,6 +154,7 @@ public class MusicFragment extends Fragment {
                         song.pause();
                         getPreviousB().setImageResource(R.drawable.play);
                         setPreviousB(null);
+                        vHolder.mDuration.setText(getDuration(previousSong));
                         playing = !playing;
                         if(myThread!=null){
                             threadRunning = false;
@@ -230,7 +231,7 @@ public class MusicFragment extends Fragment {
             }
         }
 
-        public class CustomFilter extends Filter {
+        class CustomFilter extends Filter {
             private SimpleItemRecyclerViewAdapter mAdapter;
 
             private CustomFilter(SimpleItemRecyclerViewAdapter mAdapter) {

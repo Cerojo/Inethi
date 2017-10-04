@@ -27,7 +27,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {//impleme
     private final String shareString = "Search song to Share";
     private final LayoutInflater inflater;
     private SongViewHolder songViewHolder;
-    private SearchView musicSearchView;
     private int classID;
     private Music music;
     private Beats beats;
@@ -35,9 +34,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {//impleme
     private View parentView;
     private FragmentActivity activity;
     private List<Song> songs;
-    //private CustomFilter mFilter;
-
-    //private CustomFilter mFilter;
 
     //Constructor
     public SongAdapter(Context context, int classID, View view, View parentView){
@@ -47,31 +43,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {//impleme
         beats = new Beats(context);
         voice = new Voice(context);
 
-        /*switch (classID) {
-            case 1: //Download
-                break;
-            case 2: //Upload
-                break;
-            case 3: //Music
-                songs = music.getSongs();
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
-            case 7:
-                break;
-            case 8:
-                break;
-        }*/
-
         this.parentView = parentView;
-        musicSearchView = (SearchView) view.findViewById(R.id.musicsearchView); //Set up the search bar
-        musicSearchView.setIconified(false);
-        musicSearchView.setQueryHint(shareString);
-        musicSearchView.clearFocus();
 
         //mFilter = new CustomFilter(SongAdapter.this);
     }
@@ -98,10 +70,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongViewHolder> {//impleme
             case 3: //Music
                 holder.getDusImageButton().setImageResource(R.drawable.share);
                 soundSetup(holder, music, position);
-                /*holder.getSongDuration().setText(song.getDuration());
-                holder.getSongSize().setText(song.getSize());
-                holder.getSongCover().setImageBitmap(song.getCover());
-                holder.getSongName().setText(song.getSongName());*/
                 break;
             case 4:
                 button = (Button)parentView.findViewById(R.id.button1);

@@ -312,6 +312,8 @@
                 tools:ignore="ContentDescription" />
 
             <Button
+                android:id="@+id/mic_b"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:layout_weight="4" />
@@ -341,7 +343,8 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/music_b"
+                    style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
                     android:layout_weight="1"
@@ -381,35 +384,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/frequencytextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:text="@string/frequency"
-                    android:textAlignment="center"
-                    android:textStyle="bold" />
-
-                <com.locit.cecilhlungwana.inethi.VerticalSeekBar
-                    android:id="@+id/frequencyseekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="10"
-                    android:max="10"
-                    android:progress="5" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -441,7 +418,7 @@
         <Button
             android:id="@+id/savebutton"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save" />
     </LinearLayout>
