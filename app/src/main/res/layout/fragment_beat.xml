@@ -47,7 +47,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_weight="4"
@@ -55,7 +55,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
@@ -114,7 +115,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
@@ -174,7 +176,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
@@ -234,7 +237,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal"
             tools:ignore="NestedWeights">
@@ -295,7 +298,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal"
             tools:ignore="NestedWeights">
@@ -322,7 +325,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <ImageButton
@@ -338,7 +342,7 @@
 
             <LinearLayout
                 android:layout_width="40dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="4"
                 android:orientation="vertical">
 
@@ -346,8 +350,8 @@
                     android:id="@+id/music_b"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
+                    android:layout_height="0dp"
+                    android:layout_weight="5"
                     tools:ignore="NestedWeights" />
 
                 <SeekBar
@@ -368,8 +372,9 @@
             android:id="@+id/playimageButton"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:tint="@color/primaryColorDark"
             app:srcCompat="@drawable/play"
             tools:ignore="ContentDescription" />

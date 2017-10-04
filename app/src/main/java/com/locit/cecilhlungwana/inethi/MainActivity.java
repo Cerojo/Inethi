@@ -18,10 +18,11 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.List;
 
+import layout.DownloadFragment;
 import layout.LoginFragment;
 import layout.MusicFragment;
+import layout.UploadFragment;
 
 public class MainActivity extends AppCompatActivity {
     //Private variable for class

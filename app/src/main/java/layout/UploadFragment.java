@@ -1,4 +1,4 @@
-package com.locit.cecilhlungwana.inethi;
+package layout;
 
 
 import android.os.Bundle;
@@ -7,14 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.locit.cecilhlungwana.inethi.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DownloadFragment extends Fragment {
+public class UploadFragment extends Fragment {
 
 
-    public DownloadFragment() {
+    public UploadFragment() {
         // Required empty public constructor
     }
 
