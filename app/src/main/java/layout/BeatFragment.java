@@ -44,6 +44,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.locit.cecilhlungwana.inethi.R;
+import com.locit.cecilhlungwana.inethi.SaveActivity;
 import com.locit.cecilhlungwana.inethi.Song;
 import com.locit.cecilhlungwana.inethi.SongAdapter;
 import com.locit.cecilhlungwana.inethi.VerticalSeekBar;
@@ -140,7 +141,7 @@ public class BeatFragment extends Fragment {
 
     private static final String LOG_TAG = "AudioRecordTest";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
-    private static String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Inethi/Beats/Voice";
+    private static String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Inethi/UPLOAD";
     private MediaRecorder mRecorder = null;
     private MediaPlayer mPlayer = null;
 
@@ -159,9 +160,9 @@ public class BeatFragment extends Fragment {
     private final String fileName = "file_name";
     private final String filePath = "file_path";
     private ArrayList<HashMap<String, String>> soundList;
-    private String pathDefault = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Inethi/";// + "Download/";
-    private String pathMusic = pathDefault+"Download/";
-    private String pathVoice = pathDefault +"Beats/Voice";
+    private String pathDefault = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Inethi/";
+    private String pathMusic = pathDefault+"MUSIC/";
+    private String pathVoice = pathDefault +"UPLOAD";
     //private String
     private String path = "";
     private String fileFormat;
@@ -183,12 +184,20 @@ public class BeatFragment extends Fragment {
     private int maxVolume;
     private AudioManager audioManager;
 
+    private final int start = 0;
+    private final int stop = 1;
+    private final int save = 2;
+    private int saveState = start;
+
     private int[] hiHats = {R.raw.hh1, R.raw.hh2, R.raw.hh3, R.raw.hh4, R.raw.hh5, R.raw.hh6, R.raw.hh7, R.raw.hh8, R.raw.hh9, R.raw.hh10};
     private int[] kicks = {R.raw.k1, R.raw.k2, R.raw.k3, R.raw.k4, R.raw.k5, R.raw.k6, R.raw.k7, R.raw.k8, R.raw.k9, R.raw.k10};
     private int[] percussions = {R.raw.p1, R.raw.p2, R.raw.p3, R.raw.p4, R.raw.p5, R.raw.p6, R.raw.p7, R.raw.p8, R.raw.p9, R.raw.p10};
     private int[] snares = {R.raw.s1, R.raw.s2, R.raw.s3, R.raw.s4, R.raw.s5,R.raw.s6, R.raw.s7, R.raw.s8, R.raw.s9, R.raw.s10};
     private int[] toms = {R.raw.t1, R.raw.t2, R.raw.t3, R.raw.t4, R.raw.t5, R.raw.t6, R.raw.t7, R.raw.t8, R.raw.t9, R.raw.t10};
     //******************************************
+
+    private final String createBeat = "BEAT";
+    private String audioName;
 
     public BeatFragment() {}
 
@@ -197,45 +206,6 @@ public class BeatFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_beat, container, false);
         beatsBar = (SeekBar)view.findViewById(R.id.loopseekBar);
-
-        /*String outputFile = pathMusic+"09. Brave.mp3";//Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";
-        byte[] soundBytes = null;
-        byte[] soundBytes1 = null;
-
-        try {
-            InputStream inputStream = getActivity().getContentResolver().openInputStream(Uri.fromFile(new File(outputFile)));
-            InputStream inputStream1 = getActivity().getContentResolver().openInputStream(Uri.fromFile(new File(pathMusic+"07. Wading.mp3")));
-
-            soundBytes = new byte[inputStream.available()];
-            soundBytes1 = new byte[inputStream1.available()];
-            soundBytes = toByteArray(inputStream);
-            soundBytes1 = toByteArray(inputStream1);
-
-            //Toast.makeText(getContext(), "Recordin Finished"+ " " + soundBytes, Toast.LENGTH_LONG).show();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        byte[] newSound = null;
-        assert soundBytes != null;
-        assert soundBytes1 != null;
-        if(soundBytes.length < soundBytes1.length){
-            newSound = new byte[soundBytes.length];
-            for(int i = 0; i < soundBytes.length; i++){
-                final byte b = (byte)(soundBytes[i]+soundBytes1[i]);
-                newSound[i] = b;
-            }
-        }
-        else{
-            newSound = new byte[soundBytes1.length];
-            for(int i = 0; i < soundBytes1.length; i++){
-                final byte b = (byte)(soundBytes[i]+soundBytes1[i]);
-                newSound[i] = b;
-            }
-        }
-
-        //convertBytesToFile(newSound);
-        //playMp3(soundBytes);*/
 
         // Record to the external cache directory for visibility
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
@@ -326,56 +296,43 @@ public class BeatFragment extends Fragment {
     }
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
-    private void playMp3(byte[] mp3SoundByteArray) {
-        try {
-            // create temp file that will hold byte array
-            File tempMp3 = File.createTempFile("kurchina", "mp3", getActivity().getCacheDir());
-            tempMp3.deleteOnExit();
-            FileOutputStream fos = new FileOutputStream(tempMp3);
-            fos.write(mp3SoundByteArray);
-            fos.close();
-
-            // resetting mediaplayer instance to evade problems
-            mediaPlayer.reset();
-
-            // In case you run into issues with threading consider new instance like:
-            // MediaPlayer mediaPlayer = new MediaPlayer();
-
-            // Tried passing path directly, but kept getting
-            // "Prepare failed.: status=0x1"
-            // so using file descriptor instead
-            FileInputStream fis = new FileInputStream(tempMp3);
-            mediaPlayer.setDataSource(fis.getFD());
-
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException ex) {
-            String s = ex.toString();
-            ex.printStackTrace();
-        }
-    }
-
-    private void convertBytesToFile(byte[] bytearray) {
-        try {
-
-            File outputFile = File.createTempFile("file", ".mp3", getActivity().getCacheDir());
-            outputFile.deleteOnExit();
-            File file = new File(pathMusic+"song.mp3");
-            FileOutputStream fileoutputstream = new FileOutputStream(file);
-            fileoutputstream.write(bytearray);
-            fileoutputstream.close();
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     private void saveButtonCLickEvent() {
-        Button saveButton = (Button) view.findViewById(R.id.savebutton);
+        final Button saveButton = (Button) view.findViewById(R.id.savebutton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onPlay(true);
+                switch (saveState){
+                    case start:
+                        onRecord(true);
+                        saveButton.setText(R.string.stop);
+                        saveButton.setTextColor(Color.RED);
+                        saveState = stop;
+                        break;
+                    case stop:
+                        onRecord(false);
+                        saveButton.setText(R.string.save);
+                        saveButton.setTextColor(color);
+                        saveState = save;
+                        break;
+                    case save:
+                        saveButton.setText(R.string.start);
+                        saveButton.setTextColor(color);
+                        saveState = start;
+                        Intent intent = new Intent(getContext(), SaveActivity.class);
+                        intent.putExtra(createBeat, audioName);
+                        startActivity(intent);
+                        break;
+                }
+            }
+        });
+        saveButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                saveState = start;
+                saveButton.setText("START");
+                onRecord(false);
+                return false;
             }
         });
     }
@@ -892,7 +849,7 @@ public class BeatFragment extends Fragment {
 
     private void startRecording() {
         Date currentTime = Calendar.getInstance().getTime();
-        String audioName = currentTime.getDate()+""+currentTime.getMonth()+""+currentTime.getYear()+""+currentTime.getHours()+""+currentTime.getMinutes()+""+currentTime.getSeconds();
+        audioName = currentTime.getDate()+""+currentTime.getMonth()+""+currentTime.getYear()+""+currentTime.getHours()+""+currentTime.getMinutes()+""+currentTime.getSeconds();
         audioName = mFileName+"/Inethi"+audioName+".MPEG_4";
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);

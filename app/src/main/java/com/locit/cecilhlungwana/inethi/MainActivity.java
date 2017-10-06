@@ -112,6 +112,16 @@ public class MainActivity extends AppCompatActivity {
             inethiFolder.mkdir();
         }
 
+        File musicFolder = new File(mainDirectory+ "/Inethi/MUSIC/");
+        if(!musicFolder.exists()){
+            musicFolder.mkdir();
+        }
+
+        File uploadFolder = new File(mainDirectory+ "/Inethi/UPLOAD/");
+        if(!uploadFolder.exists()){
+            uploadFolder.mkdir();
+        }
+
         File beatsFolder = new File(mainDirectory+ "/Inethi/Beats/");
         if(!beatsFolder.exists()){
             beatsFolder.mkdir();

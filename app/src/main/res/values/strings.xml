@@ -52,4 +52,6 @@
     <string name="share">SHARE</string>
 
     <string name="search_hint">Search</string>
+    <string name="stop">STOP</string>
+    <string name="start">START</string>
 </resources>

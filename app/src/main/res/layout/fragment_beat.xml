@@ -47,7 +47,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_weight="4"
@@ -57,7 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="NestedWeights">
 
             <Button
                 android:id="@+id/button1"
@@ -399,7 +400,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="10dp"
                 android:orientation="vertical"
-                tools:ignore="RtlHardcoded">
+                tools:ignore="RtlHardcoded,UselessParent">
 
                 <TextView
                     android:id="@+id/tempotextView"
@@ -425,7 +426,7 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save" />
+            android:text="START" />
     </LinearLayout>
 
 </LinearLayout>

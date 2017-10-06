@@ -48,7 +48,7 @@ public class MusicFragment extends Fragment {
     private final String fileName = "file_name";
     private final String filePath = "file_path";
     private ArrayList<HashMap<String, String>> soundList;
-    private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Inethi/" + "Download/";
+    private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Inethi/" + "MUSIC/";
     private final String fileFormat = ".mp3";
     private List<Song> songs;
     private List<Song> filteredSongs;

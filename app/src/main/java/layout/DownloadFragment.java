@@ -67,7 +67,7 @@ public class DownloadFragment extends Fragment {
     // Search edit box
     private EditText searchBox;
     //******************************************
-    private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Inethi/" + "Download/";
+    private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Inethi/" + "MUSIC/";
     private List<Song> songs;
     private List<Song> filteredSongs;
     private int counter = 0;
@@ -90,7 +90,7 @@ public class DownloadFragment extends Fragment {
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         getSongsServer();
-        getDownload();
+        //getDownload();
 
         searchBox = (EditText) view.findViewById(R.id.search_box);
 
