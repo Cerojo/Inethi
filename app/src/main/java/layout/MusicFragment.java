@@ -96,6 +96,7 @@ public class MusicFragment extends Fragment {
         return view;
     }
 
+    //Handles item view
     class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> implements Filterable {
         private List<Song> mValues;
         private CustomFilter mFilter;
@@ -123,6 +124,7 @@ public class MusicFragment extends Fragment {
             holder.mName.setText(String.valueOf(mValues.get(position).getArtistName()));
             holder.mDuration.setText(String.valueOf(mValues.get(position).getDuration()));
             holder.mSize.setText(String.valueOf(mValues.get(position).getSize()));
+            holder.songName.setText(String.valueOf(mValues.get(position).getSongName()));
             holder.mShare.setImageResource(R.drawable.share);
             if(mValues.get(position).getCover()!=null){holder.mImage.setImageBitmap(mValues.get(position).getCover());}
             else{holder.mImage.setImageResource(R.drawable.musicicon);}
@@ -209,6 +211,7 @@ public class MusicFragment extends Fragment {
             final TextView mName;
             final TextView mDuration;
             final TextView mSize;
+            final TextView songName;
             final ImageView mImage;
             final ImageButton mPlay;
             final ImageButton mShare;
@@ -220,6 +223,7 @@ public class MusicFragment extends Fragment {
                 mName = (TextView) view.findViewById(R.id.artistNametextView);
                 mDuration = (TextView) view.findViewById(R.id.durationtextView);
                 mSize = (TextView) view.findViewById(R.id.sizetextView);
+                songName = (TextView)view.findViewById(R.id.songNametextView);
                 mImage = (ImageView) view.findViewById(R.id.songCoverimageView);
                 mPlay = (ImageButton) view.findViewById(R.id.playimageButton);
                 mShare = (ImageButton) view.findViewById(R.id.downloadimageButton);
@@ -307,13 +311,14 @@ public class MusicFragment extends Fragment {
         }
     }
 
+    //Create song object
     public List<Song> getSongs() {
         List<Song> songs = new ArrayList<Song>();
         for (int i = 0; i < soundList.size(); i++) {
             Song song = new Song();
-            song.setSongName(getFileName(i));
+            song.setSongName(songName(i));
             song.setSong(getSong(i));
-            song.setArtistName(getFileName(i));
+            song.setArtistName(artistName(i));
             song.setCover(getCoverArt(i));
             song.setDuration(getDuration(i));
             song.setSize(getFileSize(i));
@@ -322,6 +327,7 @@ public class MusicFragment extends Fragment {
         return songs;
     }
 
+    //Locates music
     public ArrayList<HashMap<String, String>> getPlayList(String index) {
         ArrayList<HashMap<String, String>> fileList = new ArrayList<>();
         try {
@@ -369,6 +375,34 @@ public class MusicFragment extends Fragment {
             }
         }
         return bitmap;
+    }
+
+    private String songName(int index){
+        android.media.MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        String path = soundList.get(index).get(filePath);
+        if (path != null) {
+            mmr.setDataSource(path);
+            String s = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+            if(s != null){
+                return s;
+            }
+            return soundList.get(index).get(fileName).split(fileFormat)[0];
+        }
+        return soundList.get(index).get(fileName).split(fileFormat)[0];
+    }
+
+    private String artistName(int index){
+        android.media.MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        String path = soundList.get(index).get(filePath);
+        if (path != null) {
+            mmr.setDataSource(path);
+            String s = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+            if(s != null){
+                return s;
+            }
+            return soundList.get(index).get(fileName).split(fileFormat)[0];
+        }
+        return soundList.get(index).get(fileName).split(fileFormat)[0];
     }
 
     public String getDuration(int duration) {

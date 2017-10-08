@@ -27,26 +27,28 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <!--TextView
-            android:id="@+id/songNametextView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:text="@string/song_name"
-            android:textAlignment="center"
-            tools:ignore="NestedWeights" /-->
 
         <TextView
             android:id="@+id/artistNametextView"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:maxLines="1"
             android:gravity="center"
             android:text="@string/artist_name"
             android:textAlignment="center"
             tools:ignore="NestedWeights" />
+
+        <TextView
+            android:id="@+id/songNametextView"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:gravity="center"
+            android:text="@string/song_name"
+            android:textAlignment="center" />
     </LinearLayout>
 
     <LinearLayout

@@ -1,4 +1,5 @@
 package com.locit.cecilhlungwana.inethi;
+//Class used to create a USER object for a database
 
 import android.graphics.Bitmap;
 
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
 
 public class USER {
 
+    //User variables
     private int _id;
     private String _username;
     private String _password;
@@ -15,9 +17,7 @@ public class USER {
     private String bio;
     private Bitmap image;
 
-    public USER() {
-
-    }
+    USER() {}
 
     public USER(int id, String username, String password) {
         this._id = id;

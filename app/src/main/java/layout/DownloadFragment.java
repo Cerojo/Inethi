@@ -2,7 +2,6 @@ package layout;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,6 +46,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,26 +64,22 @@ public class DownloadFragment extends Fragment {
     private static final String TAG_SIZE = "size";
     private static final String TAG_DURATION = "duration";
     private static final String TAG_FILE = "song";
-    private static final String TAG_ID = "id";
+    private static final String TAG_ID = "_id";
 
-    private SimpleItemRecyclerViewAdapter mAdapter;
-    // Search edit box
-    private EditText searchBox;
-    //******************************************
-    private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Inethi/" + "MUSIC/";
-    private List<Song> songs;
-    private List<Song> filteredSongs;
-    private int counter = 0;
-    private boolean threadRunning = false;
-    private Runnable runnable;
-    private Thread myThread;
+    public SimpleItemRecyclerViewAdapter mAdapter;
+    public EditText searchBox;
+    public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Inethi/" + "MUSIC/";
+    public List<Song> songs;
+    public List<Song> filteredSongs;
+    public boolean threadRunning = false;
+    public Runnable runnable;
+    public Thread myThread;
     private MediaPlayer player;
-    private boolean state = true;
+    private OkHttpClient client = new OkHttpClient();
+    private Boolean stream = false;
+    private Boolean donwload = false;
 
-    public DownloadFragment() {
-        // Required empty public constructor
-    }
-
+    public DownloadFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,12 +88,7 @@ public class DownloadFragment extends Fragment {
         player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        getSongsServer();
-        //getDownload();
-
         searchBox = (EditText) view.findViewById(R.id.search_box);
-
-        // search suggestions using the edittext widget
         searchBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,190 +104,11 @@ public class DownloadFragment extends Fragment {
             }
         });
 
+        getSongsServer();
         return view;
     }
 
-    private void getSongsServer() {
-        class GetDataJSON extends AsyncTask<String, Void, String> {
-
-            @Override
-            protected String doInBackground(String... params) {
-
-                DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
-                HttpPost httppost = new HttpPost("http://cartoclock.com/beats");
-
-                // Depends on your web service
-                httppost.setHeader("Content-type", "application/json");
-
-                InputStream inputStream = null;
-                String result = null;
-                try {
-                    HttpResponse response = httpclient.execute(httppost);
-                    HttpEntity entity = response.getEntity();
-
-                    inputStream = entity.getContent();
-                    // json is UTF-8 by default
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-                    StringBuilder sb = new StringBuilder();
-
-                    String line = null;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line + "\n");
-                    }
-                    result = sb.toString();
-                } catch (Exception e) {
-                    // Oops
-                } finally {
-                    try {
-                        if (inputStream != null) inputStream.close();
-                    } catch (Exception squish) {
-                    }
-                }
-                return result;
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                showList(result);
-                songs = getSongs();
-                filteredSongs = new ArrayList<Song>();
-                filteredSongs.addAll(songs);
-
-                RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.item_list);
-                mAdapter = new SimpleItemRecyclerViewAdapter(filteredSongs);
-                recyclerView.setAdapter(mAdapter);
-            }
-        }
-        GetDataJSON g = new GetDataJSON();
-        g.execute();
-    }
-
-    private void showList(String myJSON) {
-        try {
-            JSONObject jsonObj = new JSONObject(myJSON);
-            songsJSON = jsonObj.getJSONArray(TAG_RESULTS);
-
-            for (int i = 0; i < songsJSON.length(); i++) {
-                JSONObject c = songsJSON.getJSONObject(i);
-                String id = c.getString(TAG_ID);
-                String song = c.getString(TAG_SONG);
-                String name = c.getString(TAG_NAME);
-                String size = c.getString(TAG_SIZE);
-                String duration = c.getString(TAG_DURATION);
-                String file = c.getString(TAG_FILE);
-
-                HashMap<String, String> songs = new HashMap<String, String>();
-
-                songs.put(TAG_ID, id);
-                songs.put(TAG_SONG, song);
-                songs.put(TAG_NAME, name);
-                songs.put(TAG_SIZE, size);
-                songs.put(TAG_DURATION, duration);
-                songs.put(TAG_FILE, file);
-                songList.add(songs);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void getDownload() {
-        class DownloadFile extends AsyncTask<Void, String, File> {
-
-            /**
-             * Before starting background thread Show Progress Bar Dialog
-             */
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                //showProgressDialog();
-                Toast.makeText(getContext(),"Downloading...",Toast.LENGTH_SHORT).show();
-            }
-
-            /**
-             * Downloading file in background thread
-             */
-            @Override
-            protected File doInBackground(Void... params) {
-                int count;
-                File file = null;
-                String link = "http://196.47.253.131:3003/music?id=hello2.mp3";//"http://196.47.253.131:3003/music?id=hello.mp3";
-                try {
-                    URL url = new URL(link);
-                    URLConnection conection = url.openConnection();
-                    conection.connect();
-
-                    int lenghtOfFile = conection.getContentLength();
-
-                    InputStream input = conection.getInputStream();
-
-                    player.setDataSource(link);
-                    player.prepare();
-                    player.start();
-
-                    //file = getFile(lenghtOfFile, input);
-
-                } catch (Exception e) {
-                    return null;
-                }
-                return file;
-            }
-
-            @NonNull
-            private File getFile(int lenghtOfFile, InputStream input) throws IOException {
-                File file;
-                int count;
-                File folder = new File(path);
-                if (!folder.exists())
-                    folder.mkdir();
-                file = new File(folder, "hello1.mp3");
-
-                OutputStream output = new FileOutputStream(file);
-
-                byte data[] = new byte[1024];
-
-                long total = 0;
-
-                while ((count = input.read(data)) != -1) {
-                    total += count;
-
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
-
-                    output.write(data, 0, count);
-                }
-
-                output.flush();
-
-                output.close();
-                input.close();
-                return file;
-            }
-
-            /**
-             * Updating progress bar
-             */
-            protected void onProgressUpdate(String... progress) {
-                // setting progress percentage
-                //mProgressDialog.setProgress(Integer.parseInt(progress[0]));
-            }
-
-            /**
-             * After completing background task Dismiss the progress dialog
-             **/
-            @Override
-            protected void onPostExecute(File file) {
-                // dismiss the dialog after the file was downloaded
-                //dismissProgressDialog();
-                Toast.makeText(getContext(),"Download complete",Toast.LENGTH_SHORT).show();
-            }
-
-        }
-        DownloadFile downloadFile = new DownloadFile();
-        downloadFile.execute();
-    }
-
+    //Handles item view
     class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> implements Filterable {
         private List<Song> mValues;
         private CustomFilter mFilter;
@@ -306,7 +121,7 @@ public class DownloadFragment extends Fragment {
         }
 
         @Override
-        public SimpleItemRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sound_view_layout, parent, false);
             return new ViewHolder(view);
         }
@@ -318,6 +133,32 @@ public class DownloadFragment extends Fragment {
             holder.mDuration.setText(String.valueOf(mValues.get(position).getDuration()));
             holder.mSize.setText(String.valueOf(mValues.get(position).getSize()));
             holder.mShare.setImageResource(R.drawable.download);
+            holder.mPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        donwload = true;
+                        String id = songList.get(position).get(TAG_SONG);
+                        getDownload(id);
+                    }
+                    catch (Exception ignored){
+
+                    }
+                }
+            });
+            holder.mShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        stream = true;
+                        String id = songList.get(position).get(TAG_SONG);
+                        getDownload(id);
+                    }
+                    catch (Exception ignored){
+
+                    }
+                }
+            });
         }
 
         @Override
@@ -415,6 +256,190 @@ public class DownloadFragment extends Fragment {
         }
     }
 
+    //Get Downloads from server
+    private void getSongsServer() {
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+                Request request = new Request.Builder()
+                        .url("http://192.168.1.103:8080/beats")
+                        .build();
+
+                try (Response response = client.newCall(request).execute()) {
+                    return response.body().string();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                try {
+                    showList(result);
+                }
+                catch (Exception e){
+                    Toast.makeText(getContext(),"Please Check Connection",Toast.LENGTH_LONG).show();
+                }
+                songs = getSongs();
+                filteredSongs = new ArrayList<Song>();
+                filteredSongs.addAll(songs);
+
+                RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.item_list);
+                mAdapter = new SimpleItemRecyclerViewAdapter(filteredSongs);
+                recyclerView.setAdapter(mAdapter);
+            }
+        }
+        GetDataJSON g = new GetDataJSON();
+        g.execute();
+    }
+
+    //Show the downloads
+    private void showList(String myJSON) {
+        try {
+            JSONObject jsonObj = new JSONObject(myJSON);
+            songsJSON = jsonObj.getJSONArray(TAG_RESULTS);
+
+            for (int i = 0; i < songsJSON.length(); i++) {
+                JSONObject c = songsJSON.getJSONObject(i);
+                String id = c.getString(TAG_ID);
+                String song = c.getString(TAG_SONG);
+                String name = c.getString(TAG_NAME);
+                String size = c.getString(TAG_SIZE);
+                String duration = c.getString(TAG_DURATION);
+                String file = "";//c.getString(TAG_FILE);
+
+                HashMap<String, String> songs = new HashMap<String, String>();
+
+                songs.put(TAG_ID, id);
+                songs.put(TAG_SONG, song);
+                songs.put(TAG_NAME, name);
+                songs.put(TAG_SIZE, size);
+                songs.put(TAG_DURATION, duration);
+                songs.put(TAG_FILE, file);
+                songList.add(songs);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    //Download a song from server
+    private void getDownload(final String id) {
+        class DownloadFile extends AsyncTask<Void, String, File> {
+
+            /**
+             * Before starting background thread Show Progress Bar Dialog
+             */
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //showProgressDialog();
+                if(donwload) {
+                    Toast.makeText(getContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            /**
+             * Downloading file in background thread
+             */
+            @Override
+            protected File doInBackground(Void... params) {
+                int count;
+                File file = null;
+                String link = "http://192.168.1.103:8080/download?id="+id;
+                try {
+                    URL url = new URL(link);
+                    URLConnection conection = url.openConnection();
+                    conection.connect();
+
+                    int lenghtOfFile = conection.getContentLength();
+
+                    InputStream input = conection.getInputStream();
+
+                    if(stream) {
+                        player.setDataSource(link);
+                        player.prepare();
+                        player.start();
+                    }
+                    else {
+                        if(player!=null){
+                            player.stop();
+                            player.release();
+                        }
+                    }
+
+                    if(donwload) {
+                        file = getFile(lenghtOfFile, input, id);
+                    }
+
+                } catch (Exception e) {
+                    return null;
+                }
+                return file;
+            }
+
+            @NonNull
+            private File getFile(int lenghtOfFile, InputStream input, String name) throws IOException {
+                File file;
+                int count;
+                File folder = new File(path);
+                if (!folder.exists())
+                    folder.mkdir();
+                file = new File(folder, name+".mp3");
+
+                OutputStream output = new FileOutputStream(file);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+
+                output.close();
+                input.close();
+                return file;
+            }
+
+            /**
+             * Updating progress bar
+             */
+            protected void onProgressUpdate(String... progress) {
+                // setting progress percentage
+                //mProgressDialog.setProgress(Integer.parseInt(progress[0]));
+            }
+
+            /**
+             * After completing background task Dismiss the progress dialog
+             **/
+            @Override
+            protected void onPostExecute(File file) {
+                // dismiss the dialog after the file was downloaded
+                //dismissProgressDialog();
+                if(donwload) {
+                    Toast.makeText(getContext(), "Download complete", Toast.LENGTH_SHORT).show();
+                }
+                donwload = false;
+                stream = false;
+            }
+
+        }
+        DownloadFile downloadFile = new DownloadFile();
+        downloadFile.execute();
+    }
+
+    //Add songs to arraylist
     public List<Song> getSongs() {
         List<Song> songs = new ArrayList<Song>();
         for (int i = 0; i < songList.size(); i++) {

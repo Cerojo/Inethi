@@ -5,17 +5,21 @@ package com.locit.cecilhlungwana.inethi;
 - Handles Fragment Switching
  */
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -103,58 +107,38 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
 
-        createFolders();
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
     }
 
+    //Create folders for the app
     private void createFolders(){
-        File inethiFolder = new File(mainDirectory+ "/Inethi/");
+        File inethiFolder = new File(mainDirectory+ "/Inethi/"); //Main folder
         if(!inethiFolder.exists()){
             inethiFolder.mkdir();
         }
 
-        File musicFolder = new File(mainDirectory+ "/Inethi/MUSIC/");
+        File musicFolder = new File(mainDirectory+ "/Inethi/MUSIC/"); //For downloaded Music
         if(!musicFolder.exists()){
             musicFolder.mkdir();
         }
 
-        File uploadFolder = new File(mainDirectory+ "/Inethi/UPLOAD/");
+        File uploadFolder = new File(mainDirectory+ "/Inethi/UPLOAD/"); //For created Music
         if(!uploadFolder.exists()){
             uploadFolder.mkdir();
         }
+    }
 
-        File beatsFolder = new File(mainDirectory+ "/Inethi/Beats/");
-        if(!beatsFolder.exists()){
-            beatsFolder.mkdir();
-        }
-
-        File createdFolder = new File(mainDirectory+ "/Inethi/Beats/Create/");
-        if(!createdFolder.exists()){
-            createdFolder.mkdir();
-        }
-
-        File downloadedFolder = new File(mainDirectory+ "/Inethi/Beats/Download/");
-        if(!downloadedFolder.exists()){
-            downloadedFolder.mkdir();
-        }
-
-        File loadedFolder = new File(mainDirectory+ "/Inethi/Beats/Load/");
-        if(!loadedFolder.exists()){
-            loadedFolder.mkdir();
-        }
-
-        File voiceFolder = new File(mainDirectory+ "/Inethi/Beats/Voice/");
-        if(!voiceFolder.exists()){
-            voiceFolder.mkdir();
-        }
-
-        File downloadFolder = new File(mainDirectory+ "/Inethi/Download");
-        if(!downloadFolder.exists()){
-            downloadFolder.mkdir();
-        }
-
-        File userFolder = new File(mainDirectory+ "/Inethi/User");
-        if(!userFolder.exists()){
-            userFolder.mkdir();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 1:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    createFolders();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Permission denied to read External storage", Toast.LENGTH_LONG).show();
+                }
+                break;
         }
     }
 }

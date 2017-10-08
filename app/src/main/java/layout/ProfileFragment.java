@@ -54,6 +54,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        //Populate user information
         userProfile = (ImageView)view.findViewById(R.id.userimageView);
         userProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +73,7 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    //Handles save button
     private void saveClickEvent(View view) {
         saveButton = (Button) view.findViewById(R.id.savebutton);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +84,8 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void infoUser(){//View view) {
+    //Get user information
+    private void infoUser(){
         UserInfoDBHandler dbHandler = new UserInfoDBHandler(getContext(), null, null, 1);
         USER user = dbHandler.findUser(username);
         if(name.getText() != null || bio.getText() != null) {
@@ -97,6 +100,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    //Handles signout
     private void signoutClickEvent(View view) {
         signoutButton = (Button)view.findViewById(R.id.signoutbutton);
         signoutButton.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +115,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    //Lookup user
     private void lookupUser(){
         UserInfoDBHandler dbHandler = new UserInfoDBHandler(getContext(), null, null, 1);
         USER USER = dbHandler.findUser(username);

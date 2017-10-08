@@ -3,6 +3,7 @@ package com.locit.cecilhlungwana.inethi;
 /**
  * Created by cecilhlungwana on 2017/09/27.
  */
+//Local SQL database to hold user information
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -47,6 +48,7 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //Method to create a User object
     public void addUser(USER USER) {
 
         ContentValues values = new ContentValues();
@@ -59,6 +61,7 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    //Method to add information of the user
     public void addInfo(USER USER) {
 
         ContentValues values = new ContentValues();
@@ -72,6 +75,7 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    //Method to lookup a user
     public USER findUser(String username) {
         String query = "Select * FROM " + TABLE_USER + " WHERE " + COLUMN_USERNAME + " =  \"" + username + "\"";
 
@@ -100,6 +104,7 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
         return USER;
     }
 
+    //Method to delete a user
     public boolean deleteUser(String username) {
 
         boolean result = false;
@@ -123,51 +128,3 @@ public class UserInfoDBHandler extends SQLiteOpenHelper {
         return result;
     }
 }
-
-/*
-    public void newUser (View view) {
-        UserInfoDBHandler dbHandler = new UserInfoDBHandler(this, null, null, 1);
-
-        int quantity =
-                Integer.parseInt(quantityBox.getText().toString());
-
-        USER product =
-                new USER(productBox.getText().toString(), quantity);
-
-        dbHandler.addUser(product);
-        productBox.setText("");
-        quantityBox.setText("");
-    }
-
-    public void lookupUser (View view) {
-        UserInfoDBHandler dbHandler = new UserInfoDBHandler(this, null, null, 1);
-
-        USER product =
-                dbHandler.findUser(productBox.getText().toString());
-
-        if (product != null) {
-            idView.setText(String.valueOf(product.getID()));
-
-            quantityBox.setText(String.valueOf(product.getPassword()));
-        } else {
-            idView.setText("No Match Found");
-        }
-    }
-
-    public void removeProduct (View view) {
-        UserInfoDBHandler dbHandler = new UserInfoDBHandler(this, null,
-                null, 1);
-
-        boolean result = dbHandler.deleteUser(
-                productBox.getText().toString());
-
-        if (result)
-        {
-            idView.setText("Record Deleted");
-            productBox.setText("");
-            quantityBox.setText("");
-        }
-        else
-            idView.setText("No Match Found");
-    }
- */

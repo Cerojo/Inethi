@@ -1,4 +1,5 @@
 package com.locit.cecilhlungwana.inethi;
+//Class to remove animation on the navigation bar
 
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;

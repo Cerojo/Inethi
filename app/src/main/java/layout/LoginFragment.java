@@ -3,8 +3,13 @@ package layout;
 This login fragment class handles the login in view
  */
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -59,9 +64,11 @@ public class LoginFragment extends Fragment {
         //Handle register button click event
         registerClickEvent();
 
+        //Check remember me
         loginPreferences = getActivity().getSharedPreferences("loginPrefs", getActivity().MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
 
+        //Get information and save it
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
         if (saveLogin) {
             usernameInput.setText(loginPreferences.getString("username", ""));
@@ -71,13 +78,15 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    private void newUser(){//View view) {
+    //Register New User
+    private void newUser(){
         UserInfoDBHandler dbHandler = new UserInfoDBHandler(getContext(), null, null, 1);
         USER user = new USER(usernameInput.getText().toString(), passwordInput.getText().toString());
         dbHandler.addUser(user);
     }
 
-    private boolean lookupUser(){//View view) {
+    //Lookup user
+    private boolean lookupUser(){
         UserInfoDBHandler dbHandler = new UserInfoDBHandler(getContext(), null, null, 1);
         USER USER = dbHandler.findUser(usernameInput.getText().toString());
         if(USER != null){
@@ -88,6 +97,7 @@ public class LoginFragment extends Fragment {
         return false;
     }
 
+    //Handles registration
     private void registerClickEvent() {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +128,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    //Handles Login
     private void loginClickEvent() {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +157,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    //Handles remember me
     private void rememberMeMethod() {
         username = usernameInput.getText().toString();
         password = passwordInput.getText().toString();

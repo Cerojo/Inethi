@@ -3,6 +3,7 @@ package layout;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -34,6 +36,8 @@ public class SaveFragment extends Fragment {
     private Spinner spinner;
     private EditText bioEdit;
     private Button cancel;
+    private ImageButton preview;
+    private MediaPlayer beat;
 
     private final String createBeat = "BEAT";
     private String audioName;
@@ -56,6 +60,17 @@ public class SaveFragment extends Fragment {
         spinner.setVisibility(View.INVISIBLE);
         bioEdit = (EditText)view.findViewById(R.id.bioeditText);
         bioEdit.setVisibility(View.INVISIBLE);
+        preview = (ImageButton)view.findViewById(R.id.previewimageButton);
+
+        if(getArguments()!=null) {
+            audioName = getArguments().getString(createBeat);
+            preview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
 
         cancel = (Button)view.findViewById(R.id.cancelbutton);
         cancel.setOnClickListener(new View.OnClickListener() {
