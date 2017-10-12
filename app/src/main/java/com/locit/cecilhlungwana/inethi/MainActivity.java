@@ -7,6 +7,7 @@ package com.locit.cecilhlungwana.inethi;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,12 +27,17 @@ import java.io.File;
 import layout.DownloadFragment;
 import layout.LoginFragment;
 import layout.MusicFragment;
+import layout.ProfileFragment;
 import layout.UploadFragment;
 
 public class MainActivity extends AppCompatActivity {
     //Private variable for class
     private TextView mTextMessage;
     private File mainDirectory = Environment.getExternalStorageDirectory();
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
+    private Boolean saveLogin;
+    private final String mUsername = "username";
 
     /*
     Method that handlers Navigation Listener and Fragment Change
@@ -54,7 +60,19 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_profile:
                     mTextMessage.setText(R.string.profile);
-                    changeFragment(new LoginFragment());
+                    loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+                    loginPrefsEditor = loginPreferences.edit();
+                    saveLogin = loginPreferences.getBoolean("saveLogin", false);
+                    if (saveLogin) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(mUsername, loginPreferences.getString("username", ""));
+                        ProfileFragment fragment = new ProfileFragment();
+                        fragment.setArguments(bundle);
+                        changeFragment(fragment);
+                    }
+                    else {
+                        changeFragment(new LoginFragment());
+                    }
                     return true;
                 case R.id.navigation_download:
                     mTextMessage.setText(R.string.download);
@@ -93,12 +111,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //First fragment to be load on start.
-        Fragment fragment = new LoginFragment();
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.content, fragment);
-        transaction.commit();
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+        saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        if (saveLogin) {
+            Bundle bundle = new Bundle();
+            bundle.putString(mUsername, loginPreferences.getString("username", ""));
+            ProfileFragment fragment = new ProfileFragment();
+            fragment.setArguments(bundle);
+            changeFragment(fragment);
+        }
+        else {
+            //First fragment to be load on start.
+            Fragment fragment = new LoginFragment();
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.replace(R.id.content, fragment);
+            transaction.commit();
+        }
 
         //Set up Navigation controls
         mTextMessage = (TextView) findViewById(R.id.message);

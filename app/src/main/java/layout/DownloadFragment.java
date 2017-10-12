@@ -24,21 +24,14 @@ import android.widget.Toast;
 import com.locit.cecilhlungwana.inethi.R;
 import com.locit.cecilhlungwana.inethi.Song;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -78,6 +71,7 @@ public class DownloadFragment extends Fragment {
     private OkHttpClient client = new OkHttpClient();
     private Boolean stream = false;
     private Boolean donwload = false;
+    private String ip = "http://196.47.255.209:8080/";
 
     public DownloadFragment() {}
 
@@ -130,6 +124,7 @@ public class DownloadFragment extends Fragment {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.mItem = mValues.get(position);
             holder.mName.setText(String.valueOf(mValues.get(position).getArtistName()));
+            holder.songName.setText(String.valueOf(mValues.get(position).getSongName()));
             holder.mDuration.setText(String.valueOf(mValues.get(position).getDuration()));
             holder.mSize.setText(String.valueOf(mValues.get(position).getSize()));
             holder.mShare.setImageResource(R.drawable.download);
@@ -137,7 +132,7 @@ public class DownloadFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     try {
-                        donwload = true;
+                        stream = true;
                         String id = songList.get(position).get(TAG_SONG);
                         getDownload(id);
                     }
@@ -150,7 +145,7 @@ public class DownloadFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     try {
-                        stream = true;
+                        donwload = true;
                         String id = songList.get(position).get(TAG_SONG);
                         getDownload(id);
                     }
@@ -174,6 +169,7 @@ public class DownloadFragment extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
             final View mView;
             final TextView mName;
+            final TextView songName;
             final TextView mDuration;
             final TextView mSize;
             final ImageView mImage;
@@ -185,6 +181,7 @@ public class DownloadFragment extends Fragment {
                 super(view);
                 mView = view;
                 mName = (TextView) view.findViewById(R.id.artistNametextView);
+                songName = (TextView) view.findViewById(R.id.songNametextView) ;
                 mDuration = (TextView) view.findViewById(R.id.durationtextView);
                 mSize = (TextView) view.findViewById(R.id.sizetextView);
                 mImage = (ImageView) view.findViewById(R.id.songCoverimageView);
@@ -263,7 +260,7 @@ public class DownloadFragment extends Fragment {
             @Override
             protected String doInBackground(String... params) {
                 Request request = new Request.Builder()
-                        .url("http://192.168.1.103:8080/beats")
+                        .url(ip+"beats")
                         .build();
 
                 try (Response response = client.newCall(request).execute()) {
@@ -350,7 +347,7 @@ public class DownloadFragment extends Fragment {
             protected File doInBackground(Void... params) {
                 int count;
                 File file = null;
-                String link = "http://192.168.1.103:8080/download?id="+id;
+                String link = ip+"download?id="+id;
                 try {
                     URL url = new URL(link);
                     URLConnection conection = url.openConnection();
@@ -447,7 +444,7 @@ public class DownloadFragment extends Fragment {
             HashMap<String, String> online = songList.get(i);
             song.setSongName(online.get(TAG_SONG));
             song.setSong(null);
-            song.setArtistName(online.get(TAG_SONG));
+            song.setArtistName(online.get(TAG_NAME));
             song.setCover(null);
             song.setDuration(online.get(TAG_DURATION));
             song.setSize(online.get(TAG_SIZE));

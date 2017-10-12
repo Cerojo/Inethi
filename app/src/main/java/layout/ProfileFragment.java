@@ -4,6 +4,7 @@ This profile fragment class handles the profile screen view
  */
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -45,6 +46,8 @@ public class ProfileFragment extends Fragment {
     private ImageView userProfile;
 
     public static final int GET_FROM_GALLERY = 3;
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -54,6 +57,10 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        loginPreferences = getActivity().getSharedPreferences("loginPrefs", getActivity().MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+
         //Populate user information
         userProfile = (ImageView)view.findViewById(R.id.userimageView);
         userProfile.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +113,8 @@ public class ProfileFragment extends Fragment {
         signoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loginPrefsEditor.putBoolean("saveLogin", false);
+                loginPrefsEditor.commit();
                 fragmentManager = getActivity().getSupportFragmentManager();
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.content, new LoginFragment()); //Switch fragments

@@ -863,7 +863,7 @@ public class BeatFragment extends Fragment {
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mRecorder.setOutputFile(audioName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 
         try {
             mRecorder.prepare();
@@ -877,7 +877,7 @@ public class BeatFragment extends Fragment {
 
     //Stop recording
     private void stopRecording() {
-        Toast.makeText(getContext(),"Saving",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(),"Stopping",Toast.LENGTH_LONG).show();
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
@@ -909,6 +909,7 @@ public class BeatFragment extends Fragment {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.mItem = mValues.get(position);
             holder.mName.setText(String.valueOf(mValues.get(position).getArtistName()));
+            holder.songName.setText("");
             holder.mDuration.setText(String.valueOf(mValues.get(position).getDuration()));
             holder.mSize.setText(String.valueOf(mValues.get(position).getSize()));
             holder.mShare.setImageResource(R.drawable.select);
@@ -1017,6 +1018,7 @@ public class BeatFragment extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
             final View mView;
             final TextView mName;
+            final TextView songName;
             final TextView mDuration;
             final TextView mSize;
             final ImageView mImage;
@@ -1028,6 +1030,7 @@ public class BeatFragment extends Fragment {
                 super(view);
                 mView = view;
                 mName = (TextView) view.findViewById(R.id.artistNametextView);
+                songName = (TextView)view.findViewById(R.id.songNametextView);
                 mDuration = (TextView) view.findViewById(R.id.durationtextView);
                 mSize = (TextView) view.findViewById(R.id.sizetextView);
                 mImage = (ImageView) view.findViewById(R.id.songCoverimageView);
