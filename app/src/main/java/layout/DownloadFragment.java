@@ -71,7 +71,7 @@ public class DownloadFragment extends Fragment {
     private OkHttpClient client = new OkHttpClient();
     private Boolean stream = false;
     private Boolean donwload = false;
-    private String ip = "http://196.47.255.209:8080/";
+    private String ip = "http://196.42.69.112:8080/";
 
     public DownloadFragment() {}
 

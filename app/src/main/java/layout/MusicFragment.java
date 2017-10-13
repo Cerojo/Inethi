@@ -422,24 +422,4 @@ public class MusicFragment extends Fragment {
         float fileSize = (float) (file.length() / 1000000.0);
         return Math.round(fileSize * 100.0) / 100.0 + "MB";
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(song!=null){
-            song.start();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        try {
-            if(song!=null){
-                song.pause();
-                threadRunning = false;
-            }
-        }
-        catch (Exception ignored){}
-    }
 }
