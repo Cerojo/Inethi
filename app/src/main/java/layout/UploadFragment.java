@@ -56,8 +56,8 @@ public class UploadFragment extends Fragment {
     private boolean threadRunning = false;
     private static boolean state = false;
     private Thread myThread;
-    private String urlSong = "http://196.42.69.112:8080/uploadSong";
-    private String url = "http://196.42.69.112:8080/upload";
+    private String urlSong = "http://172.20.10.3:8080/uploadSong";
+    private String url = "http://172.20.10.3:8080/upload";
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();

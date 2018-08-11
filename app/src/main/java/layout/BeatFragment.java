@@ -624,7 +624,7 @@ public class BeatFragment extends Fragment {
         try {
             LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View layout = inflater.inflate(R.layout.fragment_music_display, null);
-            pw = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            pw = new PopupWindow(layout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
             pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
             if(instrumentB) {
